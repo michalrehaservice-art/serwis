@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html><head><base target="_top"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px system-ui,sans-serif;background:#f3f4f6;color:#111}
+header{background:#1f3a5f;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+header small{opacity:.8;font-size:12px}
+nav{display:flex;background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:5}
+nav button{flex:1;padding:13px 4px;border:0;border-radius:0;background:#fff;color:#111;font-size:15px;border-bottom:3px solid transparent}
+nav button.on{border-bottom-color:#1f3a5f;font-weight:700;color:#1f3a5f}
+main{padding:10px;max-width:800px;margin:auto}
+button{background:#1f3a5f;color:#fff;border:0;border-radius:6px;padding:8px 12px;font-size:14px}
+button.g{background:#e5e7eb;color:#111}
+input,select,textarea{width:100%;padding:9px;border:1px solid #ccc;border-radius:6px;font:inherit;background:#fff;color:#111}
+textarea{min-height:80px}
+.bar{display:flex;gap:8px;margin-bottom:10px}.bar input,.bar select{flex:1}
+.card{background:#fff;border-radius:8px;margin-bottom:8px;box-shadow:0 1px 2px #0002}
+.h{display:flex;justify-content:space-between;gap:8px;padding:12px}
+.d{padding:0 12px 12px;line-height:1.5}
+.li{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid #eee;padding:6px 0}
+.row{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.b{padding:2px 8px;border-radius:10px;font-size:12px;white-space:nowrap;align-self:flex-start}
+.Nowe{background:#fde68a}.Wtoku{background:#bfdbfe}.Doust{background:#e9d5ff}.Brakf{background:#fed7aa}.Fakt{background:#fef08a}.Wykonane{background:#bbf7d0}
+.chip.akc{background:#fed7aa}.chip.akc.on{background:#c2410c;color:#fff}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px}.chip{background:#e5e7eb;color:#111;border-radius:16px;padding:7px 12px;white-space:nowrap}.chip.on{background:#1f3a5f;color:#fff}
+small,.m{color:#666}h4{margin:12px 0 4px}
+.loc{background:#eef2f7;padding:6px 8px;border-radius:6px;margin-top:10px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+dialog{width:min(560px,95vw);border:0;border-radius:10px;padding:16px;max-height:94vh;color:#111;background:#fff}
+dialog label{display:block;margin:10px 0 3px;font-size:13px;color:#555}
+label.chk{display:flex;gap:8px;align-items:center;color:#111;font-size:14px}label.chk input{width:auto}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal div{background:#fff;min-height:44px;padding:3px;border-radius:4px;font-size:12px}
+.cal .w{background:none;min-height:0;color:#666}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin:1px}
+.zl{background:#2563eb}.ok{background:#9ca3af}.pr{background:#dc2626}.p30{background:#f59e0b}
+.ev{padding:6px 0;border-top:1px solid #eee}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-top:8px}
+.gal img{width:100%;height:90px;object-fit:cover;border-radius:6px;background:#e5e7eb}
+.gal a{text-decoration:none;color:#111;font-size:11px;word-break:break-all}
+#dlg2.full{width:100vw;height:100vh;max-width:none;max-height:none;border-radius:0;padding:12px}#dlg2.full[open]{display:flex;flex-direction:column}#dlg2 .grow{flex:1;min-height:0}#dlg2 canvas{width:100%;border:2px dashed #999;border-radius:6px;background:#fff;touch-action:none}#dlg2 iframe{width:100%;border:1px solid #ccc;border-radius:6px;background:#fff}#dlg2 .bot{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;padding-top:10px}#dlg2 .bot button{flex:1;min-width:140px;padding:14px}
+#dlg2 #sg{aspect-ratio:auto!important}
+#sg{width:100%;height:auto;aspect-ratio:5/2;border:2px dashed #999;border-radius:6px;background:#fff;touch-action:none}
+#pv{width:100%;height:380px;border:1px solid #ccc;border-radius:6px;background:#fff}
+[hidden]{display:none!important}
+header{position:sticky;top:0;z-index:10;gap:10px}
+#ht{flex:1;font-size:17px}
+.hx{background:rgba(255,255,255,.2);color:#fff;width:40px;height:40px;border-radius:50%;padding:0;font-size:20px;line-height:1;flex:none}
+.xbtn{display:block;background:#e5e7eb;color:#111;border-radius:50%;width:38px;height:38px;padding:0;font-size:18px;line-height:1;margin:-4px 0 4px -4px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:6px}
+.tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:170px;border-radius:16px;color:#fff;padding:18px;box-shadow:0 2px 6px #0003}
+.tile .ti{font-size:52px;line-height:1}.tile .tt{font-weight:700;font-size:24px}.tile .ts{font-size:13px;opacity:.92;text-align:center}
+.t1{background:#1f3a5f}.t2{background:#b45309}.t3{background:#047857}.t4{background:#6d28d9}
+.big{display:block;width:100%;text-align:left;padding:16px;font-size:16px;margin:8px 0;border-radius:10px}
+.big small{opacity:.9;font-weight:400}.big.g{text-align:center}
+main label:not(.chk){display:block;margin:10px 0 3px;font-size:13px;color:#555}
+.stick{position:sticky;bottom:0;background:#fff;border-top:1px solid #ddd;padding:10px;margin:10px -10px -10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield}
+#busy{position:fixed;top:0;left:0;right:0;background:#f59e0b;text-align:center;padding:4px;z-index:99}
+</style></head><body>
+<div id="busy" hidden>Zapisywanie / wczytywanie…</div>
+<header><button id="hb" class="hx" data-act="close" aria-label="Zamknij" hidden>✕</button><b id="ht">Serwis</b><small id="me"></small></header>
+<main id="main"></main>
+<dialog id="dlg"></dialog><dialog id="dlg2"></dialog>
+<script>
+// ===== WARSTWA OFFLINE: zastępuje google.script.run lokalną bazą w telefonie + synchronizacją =====
+(function(){
+const KEYS={Klienci:'klienci',Adresy:'adresy',Urzadzenia:'urzadzenia',Zlecenia:'zlecenia',Kontakty:'kontakty',Rozmowy:'rozmowy',Oczekujace:'oczekujace'};
+const DONE=['Wykonane – brak faktury','Wykonane – faktura wystawiona','Wykonane'];
+const EMPTY=()=>({me:'',users:[],klienci:[],adresy:[],urzadzenia:[],zlecenia:[],kontakty:[],rozmowy:[],oczekujace:[]});
+const cl=x=>JSON.parse(JSON.stringify(x));
+const p2=n=>('0'+n).slice(-2),today=()=>{const d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())};
+const norm=s=>String(s||'').trim().toLowerCase().replace(/\s+/g,'');
+let ST={cfg:null,q:[],D:null,S0:null,last:'',map:{},n:0};
+const idb=new Promise((ok,no)=>{const r=indexedDB.open('serwis',1);r.onupgradeneeded=()=>r.result.createObjectStore('kv');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const kvGet=k=>idb.then(db=>new Promise((ok,no)=>{const q=db.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)}));
+const kvSet=(k,v)=>idb.then(db=>new Promise((ok,no)=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>ok();t.onerror=()=>no(t.error)}));
+const kvDel=k=>idb.then(db=>new Promise(ok=>{const t=db.transaction('kv','readwrite');t.objectStore('kv').delete(k);t.oncomplete=()=>ok()}));
+const ready=(async()=>{try{const s=await kvGet('state');if(s)ST=Object.assign(ST,s)}catch(e){}})();
+let pq=Promise.resolve();const persist=()=>{pq=pq.then(()=>kvSet('state',ST)).catch(()=>{})};
+const D_=()=>ST.D||(ST.D=EMPTY());
+const rec=(D,sh,id)=>(D[KEYS[sh]]||[]).find(x=>x.id==id);
+function setD(d){ST.D=cl(d);ST.S0=cl(d);persist()}
+function applyOp(D,op){
+ if(op.t=='save'){const L=D[KEYS[op.sheet]],i=L.findIndex(x=>x.id==op.obj.id);if(i>=0)L[i]=Object.assign({},L[i],op.obj);else L.push(cl(op.obj))}
+ else if(op.t=='del')cascade(D,op.sheet,op.id)}
+function cascade(D,sh,id){const L=D[KEYS[sh]],i=L.findIndex(x=>x.id==id);if(i>=0)L.splice(i,1);
+ if(sh=='Klienci'){['urzadzenia','adresy','kontakty'].forEach(k=>D[k]=D[k].filter(x=>x.klientId!=id))}
+ if(sh=='Adresy')D.urzadzenia.forEach(u=>{if(u.adresId==id)u.adresId=''})}
+
+// ---------- sieć ----------
+const CB={};let seq=0;
+window.OFFcb=(id,err,text)=>{const f=CB[id];if(f)f(err,text)};
+function net(b){
+ if(!ST.cfg)return Promise.reject(new Error('Najpierw skonfiguruj połączenie (ikona ⚙)'));
+ const body=JSON.stringify(Object.assign({u:ST.cfg.u,p:ST.cfg.p},b));
+ const parse=t=>{try{return JSON.parse(t)}catch(e){throw new Error('Serwer zwrócił nieprawidłową odpowiedź – sprawdź adres skryptu')}};
+ return new Promise((ok,no)=>{
+  if(window.Android&&Android.post){const id='r'+(++seq);CB[id]=(err,t)=>{delete CB[id];if(err)no(new Error(t));else{try{ok(parse(t))}catch(e){no(e)}}};Android.post(id,ST.cfg.url,body)}
+  else fetch(ST.cfg.url,{method:'POST',body:body,headers:{'Content-Type':'text/plain;charset=utf-8'}}).then(r=>r.text()).then(t=>{try{ok(parse(t))}catch(e){no(e)}}).catch(()=>no(new Error('Brak połączenia z internetem')))
+ }).then(j=>{if(!j.ok)throw new Error(j.error||'Błąd serwera');return j})}
+
+// ---------- „serwer” lokalny ----------
+const needSync=()=>{if(ST.q.length)throw new Error('Najpierw kliknij „Odbierz i wyślij” – masz niewysłane zmiany ('+ST.q.length+')')};
+async function fwd(fn,args){await ready;needSync();if(String(args[0]||'').indexOf('tmp_')===0)throw new Error('To zlecenie nie jest jeszcze wysłane na serwer – najpierw „Odbierz i wyślij”');
+ const j=await net({a:'call',fn:fn,args:args}),r=j.r;if(r&&r.klienci)setD(r);else if(r&&r.d&&r.d.klienci)setD(r.d);return r}
+function qSave(name,o){const D=D_(),base=ST.S0&&rec(ST.S0,name,o.id);
+ const ex=ST.q.find(x=>x.t=='save'&&x.sheet==name&&x.obj.id==o.id);
+ if(ex)ex.obj=Object.assign({},ex.obj,cl(o));else ST.q.push({t:'save',sheet:name,obj:cl(o),base:base?cl(base):null})}
+const API={
+ async init(){await ready;const D=cl(D_());D.me=ST.cfg?ST.cfg.u:D.me;return D},
+ async save(name,o){await ready;const D=D_();o=cl(o);
+  if(name=='Urzadzenia'&&norm(o.nr_seryjny)&&D.urzadzenia.some(u=>u.klientId==o.klientId&&u.id!=o.id&&norm(u.nr_seryjny)==norm(o.nr_seryjny)))throw new Error('Urządzenie o numerze '+o.nr_seryjny+' już istnieje u tego klienta');
+  if(!o.id){o.id='tmp_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);if(name=='Zlecenia'){o.nr='NOWE-'+(++ST.n);o.utworzono=today()}}
+  if(name=='Zlecenia'&&DONE.indexOf(o.status)>=0&&!o.data_wykonania)o.data_wykonania=today();
+  applyOp(D,{t:'save',sheet:name,obj:o});qSave(name,o);persist();return cl(D)},
+ async del(name,id){await ready;const D=D_();
+  if(name=='Klienci'&&D.klienci.some(k=>k.rodzic==id))throw new Error('Ten klient ma klientów końcowych – najpierw usuń ich albo przenieś pod innego zleceniodawcę.');
+  cascade(D,name,id);ST.q=ST.q.filter(x=>!(x.t=='save'&&x.obj.id==id));if(String(id).indexOf('tmp_')!==0)ST.q.push({t:'del',sheet:name,id:id});persist();return cl(D)},
+ async upload(zId,name,mime,b64){await ready;const ref=Date.now().toString(36)+Math.random().toString(36).slice(2,5);await kvSet('b_'+ref,b64);ST.q.push({t:'upload',zId:zId,name:name,mime:mime,ref:ref});persist();return true},
+ async protokol(zId,P,sig,mode){await ready;const D=D_(),z=cl(rec(D,'Zlecenia',zId));
+  z.data_wykonania=P.data||z.data_wykonania||today();z.pokaz=P.pokaz||'';z.uwagi=P.uwagi||'';z.prot_osoba=P.osoba||'';z.prot_tel=P.telefon||'';z.prot_email=P.email||'';z.prot_urz=P.urzadzenieId||'';
+  if(mode=='preview'){if(!ST.q.length&&navigator.onLine!==false&&String(zId).indexOf('tmp_')!==0){try{return await fwd('protokol',[zId,P,null,'preview'])}catch(e){}}return {html:localPreview(z,P)}}
+  if(mode=='final'){z.podpisujacy=P.podpisujacy||'';if(DONE.indexOf(z.status)<0)z.status='Wykonane – brak faktury'}
+  applyOp(D,{t:'save',sheet:'Zlecenia',obj:z});qSave('Zlecenia',z);
+  if(mode=='final')ST.q.push({t:'protokol',zId:zId,P:cl(P),sig:sig});
+  persist();return {d:cl(D),local:mode=='final',url:'',id:'',mail:''}}
+};
+['karta','pliki','wyslij','importUrz','importPdfUrz','zastosujWyniki','akceptujUrz','zapiszPdf'].forEach(fn=>{API[fn]=(...a)=>fwd(fn,a)});
+
+function localPreview(z,P){const D=D_(),k=D.klienci.find(x=>x.id==z.klientId)||{},par=k.rodzic&&D.klienci.find(x=>x.id==k.rodzic),zl=par||k,
+ dv=(z.urzadzenia||'').split(',').map(i=>D.urzadzenia.find(u=>u.id==i)).filter(Boolean),e=s=>esc(s),
+ L=[['przeglady','Przegląd urządzeń'],['praca','Praca serwisanta'],['czesci','Części'],['dojazd','Dojazd']].filter(a=>(P.pokaz||'').split(',').includes(a[0])).map(a=>{const c=costs(z,a[0]);return c.n>0?'<tr><td>'+a[1]+'</td><td align="right">'+money(c.n)+'</td><td align="right">'+money(c.b)+'</td></tr>':''}).join(''),
+ t=costs(z,P.pokaz);
+ return '<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><style>body{font:14px Arial;margin:14px}h3{background:#eef;padding:4px 6px}td,th{border:1px solid #ccc;padding:4px}table{border-collapse:collapse;width:100%}</style></head><body><p style="color:#b45309"><b>Podgląd uproszczony (offline).</b> Pełny PDF powstanie po synchronizacji.</p><h2>PROTOKÓŁ '+e(z.nr)+'</h2>Data wykonania: '+e(z.data_wykonania)+
+ '<h3>Zleceniodawca</h3>'+e(zl.nazwa)+'<br>'+e(zl.adres)+'<br>NIP: '+e(zl.nip)+'<h3>Klient / miejsce</h3>'+e(k.nazwa)+'<br>'+e(k.adres)+
+ '<h3>Urządzenia</h3>'+(dv.map(u=>e(u.nazwa)+' (S/N '+e(u.nr_seryjny)+')').join('<br>')||'—')+
+ '<h3>Kontakt</h3>'+e(P.osoba)+' · '+e(P.telefon)+' · '+e(P.email)+'<h3>Opis usterki</h3>'+e(z.opis_usterki)+'<h3>Wykonane czynności</h3>'+e(z.opis_prac).replace(/\n/g,'<br>')+
+ (L?'<h3>Kosztorys</h3><table><tr><th>Pozycja</th><th>Netto</th><th>Brutto</th></tr>'+L+'<tr><td><b>RAZEM</b></td><td align="right"><b>'+money(t.n)+'</b></td><td align="right"><b>'+money(t.b)+'</b></td></tr></table>':'')+
+ '<h3>Uwagi</h3>'+e(z.uwagi).replace(/\n/g,'<br>')+'</body></html>'}
+
+// ---------- synchronizacja ----------
+async function sync(){await ready;
+ if(!ST.cfg)throw new Error('Najpierw skonfiguruj połączenie (ikona ⚙)');
+ const rep={sent:0,conflicts:[],errors:[]},todo=ST.q.slice(),keep=[];let p=0;
+ try{while(p<todo.length){
+  const batch=[],first=todo[p];
+  if(first.t=='upload'||first.t=='protokol')batch.push(first);else for(let i=p;i<todo.length&&batch.length<25&&todo[i].t!='upload'&&todo[i].t!='protokol';i++)batch.push(todo[i]);
+  const ops=await Promise.all(batch.map(async op=>op.t=='upload'?Object.assign({},op,{b64:await kvGet('b_'+op.ref)}):op));
+  const r=await net({a:'push',ops:ops,map:ST.map||{}});
+  ST.map=r.map||ST.map;rep.conflicts=rep.conflicts.concat(r.conflicts||[]);
+  batch.forEach((op,i)=>{const er=(r.errors||[]).find(x=>x.i==i);if(er){keep.push(Object.assign({},op,{err:er.msg}));rep.errors.push({op:op,msg:er.msg})}else{rep.sent++;if(op.t=='upload')kvDel('b_'+op.ref)}});
+  p+=batch.length;ST.q=keep.concat(todo.slice(p));persist()}
+ }finally{ST.q=keep.concat(todo.slice(p));persist()}
+ const j=await net({a:'pull'});setD(j.d);
+ ST.q.forEach(op=>{if(op.t=='save'||op.t=='del')applyOp(ST.D,op)});
+ ST.last=new Date().toLocaleString('pl-PL');persist();return rep}
+
+// ---------- interfejs ----------
+const OFF=window.OFF={
+ async run(){$('#busy').hidden=false;try{const r=await sync();$('#busy').hidden=true;run('init');this.report(r)}catch(e){$('#busy').hidden=true;alert('Synchronizacja nie powiodła się: '+e.message+'\nNiewysłane zmiany zostały zachowane w telefonie.')}},
+ report(r){const dlg=$('#dlg');dlg.innerHTML='<h3>Synchronizacja zakończona</h3><p>✔ Wysłano zmian: <b>'+r.sent+'</b><br>✔ Pobrano najnowsze dane z serwera.</p>'+
+  (r.conflicts.length?'<h4 style="color:#b45309">⚠ Konflikty ('+r.conflicts.length+')</h4><p class="m">Twoja nowsza zmiana nadpisała serwer. Szczegóły wysłano mailem na service@rehaservice.pl.</p>'+r.conflicts.map(c=>'<div class="card"><div class="d"><b>'+esc(c.label)+'</b>'+(c.note?'<br>'+esc(c.note):'')+c.fields.map(f=>'<br><small>• '+esc(f.f)+': było „'+esc(f.serwer)+'”, jest „'+esc(f.urzadzenie)+'”</small>').join('')+'</div></div>').join(''):'')+
+  (r.errors.length?'<h4 style="color:#b91c1c">✖ Nie wysłano ('+r.errors.length+')</h4>'+r.errors.map(x=>'<div class="card"><div class="d">'+esc(x.msg)+'</div></div>').join('')+'<p class="m">Te zmiany zostały w telefonie – możesz je poprawić albo odrzucić na ekranie głównym.</p>':'')+
+  '<div class="row"><button id="rp">OK</button></div>';dlg.showModal();$('#rp').onclick=()=>dlg.close()},
+ drop(i){if(confirm('Odrzucić tę zmianę?')){const op=ST.q[i];if(op&&op.t=='upload')kvDel('b_'+op.ref);ST.q.splice(i,1);persist();render()}},
+ cfgDlg(){const dlg=$('#dlg'),c=ST.cfg||{};
+  dlg.innerHTML='<h3>⚙ Konfiguracja</h3><label>Adres skryptu (kończy się na /exec)</label><input id="cf_u" value="'+esc(c.url||'')+'" autocomplete="off" autocapitalize="off"><label>Login (e-mail)</label><input id="cf_l" value="'+esc(c.u||'')+'" autocomplete="off" autocapitalize="off"><label>Hasło</label><input id="cf_p" type="password" value="'+esc(c.p||'')+'">'+
+  '<div class="row"><button id="cf_ok">Zaloguj i pobierz dane</button></div><div id="cf_r" class="m"></div>'+(c.u?'<div class="row"><button id="cf_out" class="g">Wyloguj (usuń dane z telefonu)</button></div>':'');
+  dlg.showModal();
+  $('#cf_ok').onclick=async()=>{const old=ST.cfg,u=$('#cf_u').value.trim(),l=$('#cf_l').value.trim().toLowerCase(),p=$('#cf_p').value;
+   if(!/^https:\/\/script\.google\.com\//.test(u)){$('#cf_r').textContent='Adres musi zaczynać się od https://script.google.com/…';return}
+   $('#cf_r').textContent='Łączę…';ST.cfg={url:u,u:l,p:p};
+   try{const j=await net({a:'login'});
+    if(ST.q.length&&old&&old.u!=l){ST.cfg=old;throw new Error('Masz niewysłane zmiany innego użytkownika – najpierw je wyślij')}
+    setD(j.d);persist();$('#cf_r').textContent='✔ Zalogowano. Pobrano dane.';run('init');setTimeout(()=>dlg.close(),700)}
+   catch(e){ST.cfg=old;$('#cf_r').textContent='✖ '+e.message}};
+  if($('#cf_out'))$('#cf_out').onclick=()=>{if(ST.q.length&&!confirm('Masz niewysłane zmiany ('+ST.q.length+'). Wylogowanie je USUNIE. Kontynuować?'))return;ST.cfg=null;ST.D=null;ST.S0=null;ST.q=[];persist();dlg.close();run('init')}}
+};
+function card(){const nq=ST.q.length,bad=ST.q.map((o,i)=>[o,i]).filter(x=>x[0].err);
+ return '<div class="card" style="margin-top:14px"><div class="d" style="padding-top:12px"><button class="big g" onclick="OFF.run()" style="background:#1f3a5f;color:#fff;text-align:center">🔄 Odbierz i wyślij</button><div class="m">Niewysłane zmiany: <b>'+nq+'</b> · ostatnia synchronizacja: '+esc(ST.last||'—')+'<br>Połączenie: '+(navigator.onLine===false?'<b>brak internetu</b>':'jest')+'</div>'+
+  bad.map(x=>'<div class="ev" style="color:#b91c1c">✖ '+esc(x[0].err)+' <button class="g" onclick="OFF.drop('+x[1]+')">Odrzuć</button></div>').join('')+'</div></div>'}
+window.addEventListener('load',async()=>{await ready;
+ const h=document.querySelector('header');h.insertAdjacentHTML('beforeend','<button class="hx" id="hsync" onclick="OFF.run()" title="Odbierz i wyślij">🔄</button><button class="hx" onclick="OFF.cfgDlg()" title="Konfiguracja">⚙</button>');
+ const oR=window.rHome,oRen=window.render;
+ window.rHome=function(){oR();$('#main').insertAdjacentHTML('beforeend',card())};
+ window.render=function(){oRen();const n=ST.q.length;$('#hsync').textContent='🔄'+(n?' '+n:'')};
+ render();if(!ST.cfg)OFF.cfgDlg()});
+window.addEventListener('online',()=>{try{render()}catch(e){}});window.addEventListener('offline',()=>{try{render()}catch(e){}});
+
+function mk(ok,ko){return new Proxy({},{get:(t,k)=>k==='withSuccessHandler'?f=>mk(f,ko):k==='withFailureHandler'?f=>mk(ok,f):(...a)=>{
+ Promise.resolve().then(()=>{if(!API[k])throw new Error('Nieobsługiwana funkcja: '+k);return API[k](...a)}).then(r=>ok&&ok(r),e=>{if(ko)ko(e);else console.error(e)})}})}
+window.google={script:{run:mk(null,null)}};
+})();
+
+</script>
+<script>
+let dopen=false,D={oczekujace:[],rozmowy:[],klienci:[],adresy:[],urzadzenia:[],zlecenia:[],users:[],me:''},tab='klienci',op=null,q='',fs='',cm=new Date();
+const $=s=>document.querySelector(s),p2=n=>('0'+n).slice(-2);
+if(typeof HTMLDialogElement!=='undefined'){const _sm=HTMLDialogElement.prototype.showModal;HTMLDialogElement.prototype.showModal=function(){if(!this.querySelector('.xbtn'))this.insertAdjacentHTML('afterbegin','<button type="button" class="xbtn" aria-label="Zamknij" onclick="this.closest(\'dialog\').close()">✕</button>');_sm.call(this)}}
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+const kn=id=>{const k=D.klienci.find(x=>x.id==id);if(!k)return '?';const p=k.rodzic&&D.klienci.find(x=>x.id==k.rodzic);return p?p.nazwa+' → '+k.nazwa:k.nazwa};
+const lnk=s=>esc(s).replace(/(\+?\d[\d \-]{7,}\d)/g,m=>'<a href="tel:'+m.replace(/[ \-]/g,'')+'">'+m+'</a>').replace(/\n/g,'<br>');
+const num=s=>parseFloat(String(s).replace(',','.'))||0,money=x=>x.toFixed(2).replace('.',',');
+const dueOf=u=>u.przeglad_do||'';
+const vatv=x=>(x===''||x==null)?23:num(x);
+function runThen(then,fn,...a){$('#busy').hidden=false;google.script.run.withSuccessHandler(r=>{$('#busy').hidden=true;if(r)D=r;render();if(then)then()}).withFailureHandler(e=>{$('#busy').hidden=true;alert('Błąd: '+e.message)})[fn](...a)}
+function run(fn,...a){runThen(null,fn,...a)}
+let stack=[];
+const goTop=()=>{try{window.scrollTo(0,0)}catch(e){}};
+function push(s,id){stack.push({s:s,id:id});render();goTop()}
+function openSec(s){stack=[{s:s}];render();goTop()}
+function popView(){stack.pop();render();goTop()}
+function rHome(){$('#ht').textContent='Serwis';
+ const act=D.zlecenia.filter(z=>z.status!='Wykonane').length,akc=(D.oczekujace||[]).length;
+ const T=(s,ic,t,sub,cl)=>'<button class="tile '+cl+'" data-act="sec" data-id="'+s+'"><span class="ti">'+ic+'</span><span class="tt">'+t+'</span><span class="ts">'+sub+'</span></button>';
+ $('#main').innerHTML='<div class="tiles">'+T('klienci','👥','Klienci',D.klienci.length+' klientów','t1')+T('zlecenia','🔧','Zlecenia',act+' aktywnych'+(akc?' · 🆕 '+akc+' urządzeń do akceptacji':''),'t2')+T('moje','👤','Moje zlecenia',D.zlecenia.filter(z=>z.status!='Wykonane'&&svHas(z,D.me)).length+' aktywnych','t4')+T('kalendarz','📅','Kalendarz','terminy zleceń i przeglądy do telefonu','t3')+'</div>'}
+function render(){
+ let v=stack[stack.length-1];
+ while(v&&(v.s=='z'||v.s=='koszty')&&!D.zlecenia.find(z=>z.id==v.id)){stack.pop();v=stack[stack.length-1]}
+ if(v&&v.s=='hist'&&!D.klienci.find(k=>k.id==v.id)){stack.pop();v=stack[stack.length-1]}
+ $('#me').textContent=D.me;$('#hb').hidden=!v;
+ if(!v){rHome();return}
+ $('#ht').textContent=({klienci:'Klienci',zlecenia:'Zlecenia',moje:'Moje zlecenia',kalendarz:'Kalendarz',hist:'Historia zleceń'})[v.s]||'';
+ ({klienci:rK,zlecenia:rZ,moje:rZ,kalendarz:rC,hist:rHist,z:rZd,koszty:rKo})[v.s](v)}
+// ✕ w lewym górnym rogu: zlecenie i koszty zapisują się przed wyjściem
+function back(){const v=stack[stack.length-1];if(!v)return;
+ if(v.s=='z'){flush(v.id,popView);return}
+ if(v.s=='koszty'){saveKoszty(v.id);return}
+ popView()}
+function costs(z,pokaz){const has=k=>(pokaz==null?'przeglady,praca,czesci,dojazd':pokaz).split(',').includes(k),L=[];
+ const g=num(z.praca_godz),s=num(z.praca_stawka);
+ if(has('przeglady')&&num(z.przeglad_cena)*num(z.przeglad_ilosc)>0)L.push({n:num(z.przeglad_cena)*num(z.przeglad_ilosc),v:vatv(z.przeglad_vat)});
+ if(has('praca')&&g*s>0)L.push({n:g*s,v:vatv(z.praca_vat)});
+ if(has('czesci')&&num(z.czesci_netto)>0)L.push({n:num(z.czesci_netto),v:vatv(z.czesci_vat)});
+ if(has('dojazd')&&num(z.dojazd_netto)>0)L.push({n:num(z.dojazd_netto),v:vatv(z.dojazd_vat)});
+ return {n:L.reduce((a,l)=>a+l.n,0),b:L.reduce((a,l)=>a+l.n*(1+l.v/100),0)}}
+
+// ---------- formularz ----------
+function form(title,fields,v,sheet,nodel){
+ const dlg=$('#dlg');let h='<h3>'+title+'</h3>';
+ fields.forEach(f=>{h+='<label>'+f.l+(f.r?' *':'')+'</label>';
+  if(f.t=='area')h+='<textarea id="f_'+f.k+'">'+esc(v[f.k])+'</textarea>';
+  else if(f.t=='sel')h+='<select id="f_'+f.k+'">'+f.o.map(o=>'<option value="'+esc(o[0])+'"'+(o[0]==v[f.k]?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>';
+  else if(f.t=='multi'){const cur=String(v[f.k]||'').split(',');h+='<div id="f_'+f.k+'">'+f.o.map(o=>'<label class="chk"><input type="checkbox" value="'+esc(o[0])+'"'+(cur.includes(o[0])?' checked':'')+'> '+esc(o[1])+'</label>').join('')+'</div>'}
+  else if(f.t=='kont')h+='<select id="f_'+f.k+'"></select>';
+  else if(f.t=='devs')h+='<div id="f_'+f.k+'"></div>';
+  else if(f.t=='number')h+='<input id="f_'+f.k+'" type="text" inputmode="decimal" autocomplete="off" value="'+esc(v[f.k])+'" oninput="this.value=this.value.replace(/[^0-9.,]/g,\'\')">';
+  else h+='<input id="f_'+f.k+'" type="'+(f.t||'text')+'" value="'+esc(v[f.k])+'">'});
+ h+='<div class="row"><button id="ok">Zapisz</button><button id="no" class="g">Anuluj</button>'+(v.id&&!nodel?'<button id="rm" class="g">Usuń</button>':'')+'</div>';
+ dlg.innerHTML=h;dlg.showModal();
+ const devs=()=>{const el=$('#f_urzadzenia');if(!el)return;const k=$('#f_klientId').value,sel=(v.urzadzenia||'').split(',');
+  const L=D.urzadzenia.filter(u=>u.klientId==k);el.innerHTML=(L.length>1?'<label class="chk"><input type="checkbox" class="all"> <b>Zaznacz wszystkie ('+L.length+')</b></label>':'')+L.map(u=>{const a=D.adresy.find(x=>x.id==u.adresId);return '<label class="chk"><input type="checkbox" value="'+u.id+'"'+(sel.includes(u.id)?' checked':'')+'> '+esc(u.nazwa)+' ('+esc(u.nr_seryjny)+')'+(a?' – '+esc(a.nazwa):'')+'</label>'}).join('')||'<i class="m">Klient nie ma urządzeń</i>';
+  const al=el.querySelector('.all'),bx=()=>[...el.querySelectorAll('input[type=checkbox]:not(.all)')];
+  if(al){const sync=()=>{al.checked=bx().every(i=>i.checked)};sync();al.onchange=()=>bx().forEach(i=>i.checked=al.checked);bx().forEach(i=>i.onchange=sync)}};
+ const kon=r=>fields.filter(f=>f.t=='kont').forEach(f=>{const s=$('#f_'+f.k),cur=r?'':v[f.k];s.innerHTML=kontOpts($('#f_klientId').value).map(o=>'<option value="'+esc(o[0])+'"'+(o[0]==cur?' selected':'')+'>'+esc(o[1])+'</option>').join('')});
+ if($('#f_klientId')){devs();kon(false);$('#f_klientId').onchange=()=>{v.urzadzenia='';devs();kon(true)}}
+ $('#no').onclick=()=>dlg.close();
+ if(v.id&&!nodel)$('#rm').onclick=()=>{if(confirm('Usunąć?')){dlg.close();run('del',sheet,v.id)}};
+ $('#ok').onclick=()=>{const o=Object.assign({},v);
+  for(const f of fields){
+   if(f.t=='devs'||f.t=='multi')o[f.k]=[...$('#f_'+f.k).querySelectorAll('input[type=checkbox]:not(.all):checked')].map(i=>i.value).join(',');
+   else o[f.k]=$('#f_'+f.k).value.trim();
+   if(f.r&&!o[f.k]){alert('Uzupełnij: '+f.l);return}}
+  dlg.close();run('save',sheet,o)}
+}
+
+// ---------- KLIENCI ----------
+function rK(){$('#main').innerHTML='<div class="bar"><input placeholder="Szukaj: firma, NIP, nr seryjny" value="'+esc(q)+'" oninput="q=this.value;listK()"><button onclick="editK()">+ Klient</button></div><div id="list"></div>';listK()}
+function devRow(u){return '<div class="li"><span>'+esc(u.nazwa)+' <small>'+esc(u.producent+' '+u.model)+'</small><br><small>S/N: '+esc(u.nr_seryjny)+' · przegląd ważny do: <b>'+(esc(u.przeglad_do)||'brak daty')+'</b>'+(u.ostatni_przeglad?' (ostatni: '+esc(u.ostatni_przeglad)+')':'')+'</small></span><button class="g" onclick="editU(\''+u.klientId+'\',\''+u.id+'\')">✎</button></div>'}
+let opn={},opa={};
+const kontById=id=>id?(D.kontakty||[]).find(c=>c.id==id):null,kontOf=kid=>(D.kontakty||[]).filter(c=>c.klientId==kid);
+const telA=t=>'<a href="tel:'+String(t).replace(/[ \-]/g,'')+'">'+esc(t)+'</a>',mailA=e=>'<a href="mailto:'+esc(e)+'">'+esc(e)+'</a>';
+function kontSec(k){const L=kontOf(k.id);return '<h4 style="margin:10px 0 4px">Osoby kontaktowe ('+L.length+')</h4>'+L.map(c=>'<div class="li" style="cursor:pointer" onclick="kontDlg(\''+c.id+'\')"><span><b>'+esc(c.osoba)+'</b>'+(c.rola?' <small>· '+esc(c.rola)+'</small>':'')+'<br><small>'+[c.telefon,c.email].filter(Boolean).map(esc).join(' · ')+'</small></span><span>›</span></div>').join('')+'<div class="row"><button class="g" onclick="editKt(\''+k.id+'\')">+ Osoba kontaktowa</button></div>'}
+function kontDlg(id){const c=kontById(id),k=D.klienci.find(x=>x.id==c.klientId)||{},dlg=$('#dlg');
+ dlg.innerHTML='<h3>'+esc(c.osoba)+'</h3><p class="m">'+esc(k.nazwa)+(c.rola?' · '+esc(c.rola):'')+'</p>'+(c.telefon?'<p style="font-size:18px">☎ '+telA(c.telefon)+'</p>':'')+(c.email?'<p style="font-size:18px">✉ '+mailA(c.email)+'</p>':'')+(c.uwagi?'<p>'+esc(c.uwagi).replace(/\n/g,'<br>')+'</p>':'')+'<div class="row"><button id="ke">✎ Edytuj</button><button id="kc" class="g">Zamknij</button></div>';
+ dlg.showModal();$('#kc').onclick=()=>dlg.close();$('#ke').onclick=()=>{dlg.close();editKt(c.klientId,c.id)}}
+function editKt(kid,id){form('Osoba kontaktowa',[{k:'osoba',l:'Imię i nazwisko',r:1},{k:'rola',l:'Kim jest (np. właściciel, dział aparatury medycznej, użytkownik)'},{k:'telefon',l:'Telefon'},{k:'email',l:'E-mail',t:'email'},{k:'uwagi',l:'Uwagi',t:'area'}],kontById(id)||{klientId:kid},'Kontakty')}
+const kontOpts=kid=>{const k=D.klienci.find(x=>x.id==kid)||{},ids=[kid].concat(k.rodzic?[k.rodzic]:[]);return [['','—']].concat(ids.reduce((a,i)=>a.concat(kontOf(i)),[]).map(c=>[c.id,c.osoba+(c.rola?' – '+c.rola:'')+(c.klientId!=kid?' ('+((D.klienci.find(x=>x.id==c.klientId)||{}).nazwa||'')+')':'')]))};
+function matchK(k,s){const dv=D.urzadzenia.filter(u=>u.klientId==k.id),ad=D.adresy.filter(a=>a.klientId==k.id);
+ return !s||[k.nazwa,k.nip,k.adres,k.kontakt].concat(kontOf(k.id).map(c=>c.osoba+' '+c.rola+' '+c.telefon+' '+c.email),ad.map(a=>a.adres+' '+a.nazwa),dv.map(u=>u.nr_seryjny+' '+u.nazwa)).join(' ').toLowerCase().includes(s)}
+function cardK(k,nested,s){const dv=D.urzadzenia.filter(u=>u.klientId==k.id),ad=D.adresy.filter(a=>a.klientId==k.id);
+ let kids=D.klienci.filter(x=>x.rodzic==k.id).sort((a,b)=>a.nazwa.localeCompare(b.nazwa));if(s&&!matchK(k,s))kids=kids.filter(x=>matchK(x,s));
+ const open=opn[k.id]||(s&&!nested&&kids.length&&!matchK(k,s));
+ const grp=(title,addr,aid,edit)=>{const key=k.id+'|'+aid,list=dv.filter(u=>(u.adresId||'')==aid),o=opa[key]||(s&&list.some(u=>(u.nr_seryjny+' '+u.nazwa).toLowerCase().includes(s)));return '<div class="loc" style="cursor:pointer" onclick="opa[\''+key+'\']=!opa[\''+key+'\'];listK()"><span><b>'+(o?'▾ ':'▸ ')+title+'</b> <small>· '+list.length+' urz.</small><br><small>'+esc(addr)+'</small></span>'+edit+'</div>'+(o?list.map(devRow).join('')+'<div class="row"><button class="g" onclick="editU(\''+k.id+'\',null,\''+aid+'\')">+ Urządzenie tutaj</button><button class="g" onclick="importDlg(\''+k.id+'\',\''+aid+'\')">📥 Import z Excela</button><button class="g" onclick="importPdfDlg(\''+k.id+'\',\''+aid+'\')">📄 Import z PDF</button></div>':'')};
+ return '<div class="card"'+(nested?' style="margin:8px 0 0;box-shadow:none;border:1px solid #cbd5e1"':'')+'><div class="h" onclick="opn[\''+k.id+'\']=!opn[\''+k.id+'\'];listK()"><b>'+(nested?'↳ ':'')+esc(k.nazwa)+'</b><small>'+(kids.length?kids.length+' kl. · ':'')+dv.length+' urz.</small></div>'+
+ (open?'<div class="d">NIP: '+esc(k.nip)+(k.kontakt?'<br><small>'+lnk(k.kontakt)+'</small>':'')+kontSec(k)+
+ '<div class="row"><button onclick="editK(\''+k.id+'\')">Edytuj klienta</button><button class="g" data-act="hist" data-id="'+k.id+'">📜 Historia zleceń ('+histOrders(k.id).length+')</button><button class="g" onclick="editA(\''+k.id+'\')">+ Dodaj adres</button>'+(nested?'':'<button class="g" onclick="editK(null,\''+k.id+'\')">+ Klient końcowy</button>')+'</div>'+
+ grp('Siedziba',k.adres,'','')+ad.map(a=>grp(esc(a.nazwa||'Adres'),a.adres,a.id,'<button class="g" onclick="event.stopPropagation();editA(\''+k.id+'\',\''+a.id+'\')">✎</button>')).join('')+
+ (kids.length?'<h4>Klienci końcowi ('+kids.length+')</h4>'+kids.map(c=>cardK(c,true,s)).join(''):'')+'</div>':'')+'</div>'}
+function listK(){const s=q.toLowerCase(),ids=new Set(D.klienci.map(k=>k.id));
+ const tops=D.klienci.filter(k=>!k.rodzic||!ids.has(k.rodzic)).filter(k=>matchK(k,s)||D.klienci.some(c=>c.rodzic==k.id&&matchK(c,s))).sort((a,b)=>a.nazwa.localeCompare(b.nazwa));
+ $('#list').innerHTML=tops.map(k=>cardK(k,false,s)).join('')||'<p class="m">Brak klientów</p>'}
+function editK(id,rodzic){const v=D.klienci.find(x=>x.id==id)||{rodzic:rodzic||''};
+ form(v.rodzic?'Klient końcowy':'Klient',[{k:'nazwa',l:'Nazwa firmy',r:1},{k:'adres',l:'Adres główny (siedziba)'},{k:'nip',l:'NIP'},{k:'kontakt',l:'Notatka kontaktowa (stare dane – osoby dodajesz niżej, w karcie klienta)',t:'area'},
+  {k:'rodzic',l:'Zleceniodawca (firma, która zleca nam pracę dla tego klienta)',t:'sel',o:[['','— brak (zwykły klient albo sam zleceniodawca)']].concat(D.klienci.filter(x=>!x.rodzic&&x.id!=id).map(x=>[x.id,x.nazwa]))}],v,'Klienci')}
+function editA(kid,id){form('Dodatkowy adres',[{k:'nazwa',l:'Nazwa (np. Oddział Katowice)'},{k:'adres',l:'Adres',r:1}],D.adresy.find(x=>x.id==id)||{klientId:kid},'Adresy')}
+function editU(kid,id,aid){const v=D.urzadzenia.find(x=>x.id==id)||{klientId:kid,adresId:aid||''};
+ form('Urządzenie',[{k:'nazwa',l:'Nazwa urządzenia',r:1},{k:'producent',l:'Producent'},{k:'model',l:'Model'},{k:'nr_seryjny',l:'Numer seryjny'},
+  {k:'adresId',l:'Gdzie stoi',t:'sel',o:[['','Siedziba']].concat(D.adresy.filter(a=>a.klientId==kid).map(a=>[a.id,(a.nazwa||'Adres')+' – '+a.adres]))},
+  {k:'przeglad_do',l:'Przegląd ważny do (termin następnego przeglądu)',t:'date'}],v,'Urzadzenia')}
+
+// ---------- ZLECENIA ----------
+const STS=[['Nowe','Nowe'],['W toku','W toku'],['Do ustalenia','Do ustalenia (czekam na klienta / termin)'],['Wykonane – brak faktury','Wykonane – nie wystawiono faktury'],['Wykonane – faktura wystawiona','Wykonane – faktura wystawiona'],['Wykonane','Wykonane – zapłacone']],
+CH=[['','Wszystkie'],['Nowe','Nowe'],['W toku','W toku'],['Do ustalenia','Do ustalenia'],['Wykonane – brak faktury','Wykonane – brak faktury'],['Wykonane – faktura wystawiona','Wykonane – faktura wystawiona'],['Wykonane','Wykonane (zapłacone)']],
+STC={'Nowe':'Nowe','W toku':'Wtoku','Do ustalenia':'Doust','Wykonane – brak faktury':'Brakf','Wykonane – faktura wystawiona':'Fakt','Wykonane':'Wykonane'},
+stShort=s=>s=='Wykonane'?'Wykonane (zapłacone)':s,
+VATS=[['23','23%'],['8','8%'],['0','0%']];
+function rZ(){$('#main').innerHTML='<div class="bar"><button onclick="editZ()">+ Zlecenie</button></div><div class="chips">'+CH.map((c,i)=>'<button class="chip'+(fs==c[0]?' on':'')+'" onclick="fs=CH['+i+'][0];rZ()">'+c[1]+' ('+baseZ().filter(z=>!c[0]||z.status==c[0]).length+')</button>').join('')+(D.oczekujace.length?'<button class="chip akc'+(fs=='__akc'?' on':'')+'" onclick="fs=\'__akc\';rZ()">🆕 Urządzenia do akceptacji ('+D.oczekujace.length+')</button>':'')+'</div><div id="list"></div>';listZ()}
+function listAkc(){$('#list').innerHTML='<p class="m">Urządzenia z raportów badań, których nie ma jeszcze w bazie klienta. Zaakceptuj, żeby dodać je do klienta (z datą ważności przeglądu).</p>'+D.oczekujace.map(p=>'<div class="card" style="border-left:4px solid #c2410c"><div class="h"><b>'+esc(p.nazwa)+'</b><small>'+esc(kn(p.klientId))+'</small></div><div class="d">Nr seryjny: <b>'+esc(p.nr_seryjny)+'</b><br>Przegląd ważny do: '+esc(p.przeglad_do||'–')+' · wykonany: '+esc(p.ostatni_przeglad||'–')+(p.zlecenieId?'<br><small>Zlecenie: '+esc((D.zlecenia.find(z=>z.id==p.zlecenieId)||{}).nr||'')+'</small>':'')+'<div class="row"><button onclick="run(\'akceptujUrz\',\''+p.id+'\')">✔ Dodaj do bazy klienta</button><button class="g" onclick="if(confirm(\'Odrzucić?\'))run(\'del\',\'Oczekujace\',\''+p.id+'\')">✖ Odrzuć</button></div></div></div>').join('')||'<p class="m">Brak urządzeń do akceptacji</p>'}
+function invDlg(id){const z=D.zlecenia.find(x=>x.id==id);form('Faktura – '+z.nr,[{k:'faktura_nr',l:'Numer faktury'},{k:'faktura_data',l:'Data wystawienia',t:'date'}],Object.assign({},z,{status:'Wykonane – faktura wystawiona',faktura_data:z.faktura_data||iso(new Date())}),'Zlecenia',true)}
+function paidZ(id){const z=D.zlecenia.find(x=>x.id==id);if(confirm('Klient zapłacił za '+z.nr+'? Zlecenie przejdzie do „Wykonane”.'))run('save','Zlecenia',Object.assign({},z,{status:'Wykonane',zaplata_data:iso(new Date())}))}
+const svList=z=>String(z.serwisant||'').split(',').filter(Boolean),svHas=(z,e)=>svList(z).includes(e),
+svNames=z=>svList(z).map(e=>(D.users.find(u=>u.email==e)||{}).imie||e).join(', ');
+const baseZ=()=>{const v=stack[0];return v&&v.s=='moje'?D.zlecenia.filter(z=>svHas(z,D.me)):D.zlecenia};
+const trunc=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n)+'…':s};
+const dvOf=z=>(z.urzadzenia||'').split(',').filter(Boolean).map(i=>D.urzadzenia.find(u=>u.id==i)).filter(Boolean);
+function devLabel(z){const dv=dvOf(z);if(dv.length>1)return (z.typ=='Przegląd'?'Przeglądy':'Naprawy')+' – '+dv.length+' szt.';
+ return dv.length?dv[0].nazwa+(dv[0].nr_seryjny?' ('+dv[0].nr_seryjny+')':''):''}
+function contactOf(k){k=k||{};const p=k.rodzic&&D.klienci.find(x=>x.id==k.rodzic),kt=String(k.kontakt||(p&&p.kontakt)||''),E=/[^\s,;|]+@[^\s,;|]+\.[^\s,;|]+/g;
+ return {txt:kt,em:kt.match(E)||[],ph:(kt.replace(E,' ').match(/\+?\d[\d \-]{7,}\d/g)||[]).map(s=>s.trim())}}
+function placeOf(z){const k=D.klienci.find(x=>x.id==z.klientId)||{},set=[];
+ dvOf(z).forEach(u=>{const a=D.adresy.find(x=>x.id==u.adresId),t=a?a.adres:(k.adres||'');if(t&&!set.includes(t))set.push(t)});
+ if(!set.length&&k.adres)set.push(k.adres);return set}
+const histOrders=kid=>{const ids=[kid].concat(D.klienci.filter(x=>x.rodzic==kid).map(x=>x.id));return D.zlecenia.filter(z=>ids.includes(z.klientId))};
+function zCard(z){const sv=svNames(z),c=costs(z),dl=devLabel(z);
+ return '<div class="card" data-act="openz" data-id="'+z.id+'" style="cursor:pointer"><div class="h"><b>'+esc(z.nr)+' · '+esc(kn(z.klientId))+'</b><span class="b '+(STC[z.status]||'Nowe')+'">'+esc(stShort(z.status))+'</span></div><div class="d">'+
+  esc(z.typ)+' · termin: '+(esc(z.termin)||'–')+(z.data_wykonania?' · wykonano: '+esc(z.data_wykonania):'')+(sv?' · '+esc(sv):'')+
+  (dl?'<br><b>'+esc(dl)+'</b>':'')+(z.typ!='Przegląd'&&z.opis_usterki?'<br><small>'+esc(trunc(z.opis_usterki,110))+'</small>':'')+
+  (c.n>0?'<br><small>netto '+money(c.n)+' zł · brutto '+money(c.b)+' zł</small>':'')+(z.faktura_nr?'<br><small>Faktura: '+esc(z.faktura_nr)+'</small>':'')+
+  (z.status=='Wykonane – brak faktury'?'<div class="row"><button data-act="fv" data-id="'+z.id+'">🧾 Faktura wystawiona</button></div>':'')+
+  (z.status=='Wykonane – faktura wystawiona'?'<div class="row"><button data-act="paid" data-id="'+z.id+'">💰 Klient zapłacił</button></div>':'')+'</div></div>'}
+function listZ(){
+ if(fs=='__akc'){listAkc();return}
+ $('#list').innerHTML=baseZ().filter(z=>!fs||z.status==fs).sort((a,b)=>b.nr.localeCompare(a.nr)).map(zCard).join('')||'<p class="m">Brak zleceń</p>'}
+
+// ---------- HISTORIA ZLECEŃ KLIENTA ----------
+function rHist(v){const L=histOrders(v.id).sort((a,b)=>b.nr.localeCompare(a.nr)),has=D.klienci.some(x=>x.rodzic==v.id),
+ tot=L.reduce((a,z)=>{const c=costs(z);a.n+=c.n;a.b+=c.b;return a},{n:0,b:0}),done=L.filter(z=>z.status.startsWith('Wykonane')).length;
+ $('#main').innerHTML='<h3 style="margin:4px 0">'+esc(kn(v.id))+'</h3><p class="m" style="margin:0 0 10px">Zleceń: <b>'+L.length+'</b> · wykonanych: <b>'+done+'</b>'+(tot.n>0?' · suma netto '+money(tot.n)+' zł · brutto '+money(tot.b)+' zł':'')+(has?'<br>(razem z klientami końcowymi)':'')+'</p>'+
+ (L.map(zCard).join('')||'<p class="m">Ten klient nie ma jeszcze żadnych zleceń.</p>')}
+
+// ---------- EKRAN ZLECENIA ----------
+function autoDate(){const d=$('#z_data');if(d&&!d.value)d.value=iso(new Date())}
+function rZd(v){const z=D.zlecenia.find(x=>x.id==v.id),k=D.klienci.find(x=>x.id==z.klientId)||{},c=contactOf(k),dv=dvOf(z),pl=placeOf(z),t=costs(z),
+ sv=svNames(z);
+ $('#ht').textContent=z.nr;
+ const pU=kontById(z.kontakt_uz),pZ=kontById(z.kontakt_zl),pers=(lab,p)=>p?'<div style="margin-top:5px"><b>'+lab+':</b> '+esc(p.osoba)+(p.rola?' <small>('+esc(p.rola)+')</small>':'')+'<br>'+(p.telefon?'☎ '+telA(p.telefon)+' &nbsp; ':'')+(p.email?'✉ '+mailA(p.email):'')+(p.uwagi?'<br><small>'+esc(p.uwagi)+'</small>':'')+'</div>':'';
+ const devs=dv.length>1?'<details style="margin-top:6px"><summary><b>'+esc(devLabel(z))+'</b></summary>'+dv.map(u=>'<div class="ev">'+esc(u.nazwa)+' <small>S/N '+esc(u.nr_seryjny)+'</small></div>').join('')+'</details>':(dv.length?'<div style="margin-top:6px"><b>'+esc(devLabel(z))+'</b></div>':'');
+ const tel=c.ph.map(p=>'☎ <a href="tel:'+p.replace(/[ \-]/g,'')+'">'+esc(p)+'</a>').join(' &nbsp; '),mail=c.em.map(e=>'✉ <a href="mailto:'+esc(e)+'">'+esc(e)+'</a>').join(' &nbsp; ');
+ const B=(a,l,cls)=>'<button class="'+(cls||'g')+'" data-act="'+a+'" data-id="'+z.id+'">'+l+'</button>';
+ $('#main').innerHTML=
+ '<div class="card"><div class="d" style="padding-top:12px"><div style="font-size:17px;font-weight:700">'+esc(kn(z.klientId))+'</div>'+(pl.length?'<div>📍 '+pl.map(esc).join('; ')+'</div>':'')+
+  ((pU||pZ)?pers('Osoba kontaktowa',pU)+pers('Zlecił(a)',pZ):'<div>'+(tel||'<span class="m">☎ brak telefonu</span>')+'</div><div>'+(mail||'<span class="m">✉ brak e-maila</span>')+'</div>'+(!tel&&!mail&&c.txt?'<div class="m">'+esc(c.txt)+'</div>':''))+'</div></div>'+
+ '<div class="card"><div class="d" style="padding-top:12px"><b>'+esc(z.typ)+'</b> · termin: '+(esc(z.termin)||'–')+(sv?' · '+esc(sv):'')+devs+
+  (z.opis_usterki?'<div style="margin-top:6px"><b>Opis usterki:</b><br>'+esc(z.opis_usterki).replace(/\n/g,'<br>')+'</div>':'')+
+  (z.faktura_nr?'<div style="margin-top:6px"><b>Faktura:</b> '+esc(z.faktura_nr)+(z.faktura_data?' ('+esc(z.faktura_data)+')':'')+'</div>':'')+
+  (z.pdf?'<div style="margin-top:6px"><a href="https://drive.google.com/file/d/'+esc(z.pdf)+'/view" target="_blank">📄 Protokół PDF</a></div>':'')+'</div></div>'+
+ '<div class="card"><div class="d" style="padding-top:12px">'+
+  '<label>Opis wykonanych prac</label><textarea id="z_opis" style="min-height:120px" oninput="autoDate()">'+esc(z.opis_prac)+'</textarea>'+
+  '<label>Data wykonania</label><input id="z_data" type="date" value="'+esc(z.data_wykonania)+'">'+
+  '<label>Status</label><select id="z_st">'+STS.map(o=>'<option value="'+esc(o[0])+'"'+(o[0]==z.status?' selected':'')+'>'+esc(o[1])+'</option>').join('')+'</select>'+
+  '<label>Uwagi wewnętrzne (niewidoczne dla klienta)</label><textarea id="z_wew">'+esc(z.uwagi_wewn)+'</textarea></div></div>'+
+ B('koszty','💰 Koszty'+(t.n>0?' <small>· netto '+money(t.n)+' zł · brutto '+money(t.b)+' zł</small>':' <small>· wpisz kwoty</small>'),'big')+
+ (z.status=='Wykonane – brak faktury'?B('fv','🧾 Faktura wystawiona','big'):'')+(z.status=='Wykonane – faktura wystawiona'?B('paid','💰 Klient zapłacił','big'):'')+
+ '<div class="row">'+B('edit','✎ Edytuj zlecenie')+B('karta','🖨 Karta')+B('prot','📝 Protokół')+B('wyn','🔬 Wyniki badań')+B('pliki','📎 Pliki')+'</div>'+
+ B('closeZ','Zamknij i zapisz','big g')}
+function readZ(id){const v=stack[stack.length-1];if(!v||v.s!='z'||v.id!=id)return null;const g=s=>{const e=$(s);return e?e.value:null},
+ o={opis_prac:g('#z_opis'),data_wykonania:g('#z_data'),status:g('#z_st'),uwagi_wewn:g('#z_wew')};Object.keys(o).forEach(k=>{if(o[k]===null)delete o[k]});return o}
+// zapis pól wpisanych na ekranie zlecenia (jeśli się zmieniły), potem dalej
+function flush(id,then){const z=D.zlecenia.find(x=>x.id==id),f=readZ(id);
+ if(!z||!f||!Object.keys(f).some(k=>String(z[k]||'')!==String(f[k]||''))){then();return}
+ runThen(then,'save','Zlecenia',Object.assign({},z,f))}
+
+// ---------- EKRAN KOSZTÓW ----------
+const KF=['przeglad_cena','przeglad_ilosc','przeglad_vat','praca_godz','praca_stawka','praca_vat','czesci_opis','czesci_netto','czesci_vat','dojazd_netto','dojazd_vat'];
+function rKo(v){const z0=D.zlecenia.find(x=>x.id==v.id),nd=dvOf(z0).length,z=Object.assign({},z0,{przeglad_ilosc:z0.przeglad_ilosc||(nd?String(nd):'')});
+ $('#ht').textContent='Koszty – '+z0.nr;
+ const n=(k,l)=>'<label>'+l+'</label><input id="c_'+k+'" type="text" inputmode="decimal" autocomplete="off" value="'+esc(z[k])+'" oninput="this.value=this.value.replace(/[^0-9.,]/g,\'\');sumKo()">',
+ s=(k,l)=>'<label>'+l+'</label><select id="c_'+k+'" onchange="sumKo()">'+VATS.map(o=>'<option value="'+o[0]+'"'+(String(z[k]||'23')==o[0]?' selected':'')+'>'+o[1]+'</option>').join('')+'</select>',
+ sec=(t,key,b)=>'<div class="card"><div class="d" style="padding-top:12px"><h4 style="margin-top:0">'+t+'</h4>'+b+'<div class="m" id="ko_'+key+'" style="margin-top:6px"></div></div></div>';
+ $('#main').innerHTML='<p class="m" style="margin:0 0 8px">'+esc(kn(z0.klientId))+(devLabel(z0)?' · '+esc(devLabel(z0)):'')+'</p>'+
+  sec('Koszt przeglądów','przeglady',n('przeglad_cena','Cena netto za 1 urządzenie (zł)')+n('przeglad_ilosc','Ilość urządzeń')+s('przeglad_vat','VAT'))+
+  sec('Praca serwisanta','praca',n('praca_godz','Czas pracy (godziny)')+n('praca_stawka','Stawka za godzinę, netto (zł)')+s('praca_vat','VAT'))+
+  sec('Części','czesci','<label>Użyte części (opis)</label><textarea id="c_czesci_opis">'+esc(z.czesci_opis)+'</textarea>'+n('czesci_netto','Cena części, netto (zł)')+s('czesci_vat','VAT'))+
+  sec('Dojazd','dojazd',n('dojazd_netto','Dojazd, netto (zł)')+s('dojazd_vat','VAT'))+
+  '<div class="stick"><div id="ko_sum"></div><button data-act="saveK" data-id="'+z0.id+'">Zapisz</button></div>';
+ sumKo()}
+function sumKo(){const o={};KF.forEach(k=>{const e=$('#c_'+k);o[k]=e?e.value:''});
+ ['przeglady','praca','czesci','dojazd'].forEach(k=>{const t=costs(o,k),e=$('#ko_'+k);if(e)e.textContent=t.n>0?'netto '+money(t.n)+' zł · brutto '+money(t.b)+' zł':''});
+ const t=costs(o),e=$('#ko_sum');if(e)e.innerHTML='Razem: netto <b>'+money(t.n)+' zł</b> · brutto <b>'+money(t.b)+' zł</b>'}
+function saveKoszty(id){const z=D.zlecenia.find(x=>x.id==id),o=Object.assign({},z);KF.forEach(k=>{const e=$('#c_'+k);if(e)o[k]=e.value.trim()});
+ if(!KF.some(k=>String(z[k]||'')!==String(o[k]||''))){popView();return}
+ runThen(popView,'save','Zlecenia',o)}
+
+// ---------- AKCJE (przyciski z data-act) ----------
+const ACT={
+ sec:id=>openSec(id),
+ close:()=>back(),closeZ:()=>back(),
+ openz:id=>push('z',id),hist:id=>push('hist',id),
+ koszty:id=>flush(id,()=>push('koszty',id)),saveK:id=>saveKoszty(id),
+ edit:id=>flush(id,()=>editZ(id)),karta:id=>flush(id,()=>kartaDlg(id)),prot:id=>flush(id,()=>protDlg(id)),
+ wyn:id=>flush(id,()=>wynikiDlg(id)),pliki:id=>flush(id,()=>filesDlg(id)),
+ fv:id=>flush(id,()=>invDlg(id)),paid:id=>flush(id,()=>paidZ(id))};
+if(document.addEventListener)document.addEventListener('click',e=>{const b=e.target&&e.target.closest&&e.target.closest('[data-act]');if(b&&ACT[b.dataset.act])ACT[b.dataset.act](b.dataset.id)});
+
+function editZ(id){const v=D.zlecenia.find(x=>x.id==id)||{typ:'Przegląd',status:'Nowe',serwisant:D.me};
+ form('Zlecenie '+(v.nr||'(nowe)'),[
+  {k:'klientId',l:'Klient',t:'sel',o:D.klienci.slice().sort((a,b)=>kn(a.id).localeCompare(kn(b.id))).map(k=>[k.id,kn(k.id)]),r:1},
+  {k:'typ',l:'Rodzaj',t:'sel',o:[['Przegląd','Przegląd'],['Naprawa','Naprawa / usterka']]},
+  {k:'urzadzenia',l:'Urządzenia',t:'devs'},
+  {k:'kontakt_uz',l:'Osoba kontaktowa (użytkownik)',t:'kont'},
+  {k:'kontakt_zl',l:'Osoba, która zleciła',t:'kont'},
+  {k:'opis_usterki',l:'Opis usterki / uwagi',t:'area'},
+  {k:'termin',l:'Termin',t:'date'},
+  {k:'serwisant',l:'Serwisant (można zaznaczyć obu)',t:'multi',o:D.users.map(u=>[u.email,u.imie||u.email])},
+  {k:'status',l:'Status',t:'sel',o:STS}],v,'Zlecenia')}
+// ---------- KARTA (PDF dla serwisanta) ----------
+function mailBox(id,mail,subj){return '<label>Wyślij e-mailem</label><input id="em" type="email" value="'+esc(mail||'')+'" placeholder="adres e-mail"><div class="row"><button id="se">Wyślij PDF</button></div>'}
+function bindMail(id,subj){$('#se').onclick=()=>{$('#se').disabled=true;google.script.run.withSuccessHandler(()=>{$('#se').textContent='Wysłano ✔'}).withFailureHandler(e=>{$('#se').disabled=false;alert(e.message)}).wyslij(id,$('#em').value.trim(),subj)}}
+function kartaDlg(id){const z=D.zlecenia.find(x=>x.id==id),dlg=$('#dlg');
+ dlg.innerHTML='<h3>Karta zlecenia '+esc(z.nr)+'</h3><div id="r" class="m">Generuję PDF…</div><div class="row"><button id="cl" class="g">Zamknij</button></div>';dlg.showModal();$('#cl').onclick=()=>dlg.close();
+ google.script.run.withSuccessHandler(r=>{$('#r').innerHTML='<a href="'+esc(r.url)+'" target="_blank">📄 Otwórz PDF (stamtąd wydrukujesz)</a>'+mailBox(r.id);bindMail(r.id,'Karta zlecenia '+z.nr)}).withFailureHandler(e=>$('#r').textContent='Błąd: '+e.message).karta(id)}
+
+// ---------- PROTOKÓŁ + PODPIS ----------
+function protDlg(id,keep){const z=D.zlecenia.find(x=>x.id==id),k=D.klienci.find(x=>x.id==z.klientId)||{kontakt:''},par=k.rodzic&&D.klienci.find(x=>x.id==k.rodzic),dlg=$('#dlg'),dlg2=$('#dlg2');
+ const dv=(z.urzadzenia||'').split(',').map(i=>D.urzadzenia.find(u=>u.id==i)).filter(Boolean);
+ const pu=kontById(z.kontakt_uz),kt=k.kontakt||(par&&par.kontakt)||'',mail=z.prot_email||(pu&&pu.email)||(kt.match(/[^\s,;]+@[^\s,;]+\.[^\s,;]+/)||[''])[0],tel=z.prot_tel||(pu&&pu.telefon)||(kt.match(/\+?\d[\d \-]{7,}\d/)||[''])[0],
+  os=z.prot_osoba||(pu&&pu.osoba)||(kt.split('\n')[0]||'').replace(mail,'').replace(tel,'').replace(/[,;|]/g,' ').trim();
+ const pk=z.pokaz!==''&&z.pokaz!=null?z.pokaz.split(','):['przeglady','praca','czesci','dojazd'];
+ dlg.innerHTML='<h3>Protokół – '+esc(z.nr)+'</h3>'+
+ '<label>Data wykonania usługi</label><input id="p_d" type="date" value="'+esc(z.data_wykonania||iso(new Date()))+'">'+
+ (dv.length>1?'<label>Urządzenie w protokole</label><select id="p_u"><option value="">— nie wypełniaj —</option>'+dv.map(u=>'<option value="'+u.id+'"'+(u.id==z.prot_urz?' selected':'')+'>'+esc(u.nazwa+' ('+u.nr_seryjny+')')+'</option>').join('')+'</select>':'<input id="p_u" type="hidden" value="">')+
+ '<label>Osoba kontaktowa</label><input id="p_o" value="'+esc(os)+'"><label>Telefon</label><input id="p_t" value="'+esc(tel)+'"><label>E-mail</label><input id="p_e" value="'+esc(mail)+'">'+
+ '<label>Co pokazać w kosztorysie dla klienta</label>'+[['przeglady','Koszt przeglądów (cena za szt. × ilość)'],['praca','Praca serwisanta'],['czesci','Części'],['dojazd','Dojazd']].map(a=>'<label class="chk"><input type="checkbox" class="pk" value="'+a[0]+'"'+(pk.includes(a[0])?' checked':'')+'> '+a[1]+'</label>').join('')+
+ '<label>Uwagi dodatkowe (drukowane w protokole)</label><textarea id="p_w">'+esc(z.uwagi)+'</textarea>'+
+ '<div class="row"><button id="pvb" class="g">👁 Podgląd protokołu</button></div>'+
+ '<div class="row"><button id="sv">💾 Zapisz</button><button id="bk" class="g">← Wstecz</button><button id="sgn">✍ Zamknij i podpisz</button></div><div id="r" class="m"></div>';
+ dlg.showModal();
+ const P=()=>({data:$('#p_d').value,urzadzenieId:$('#p_u').value,osoba:$('#p_o').value,telefon:$('#p_t').value,email:$('#p_e').value,uwagi:$('#p_w').value,pokaz:[...dlg.querySelectorAll('.pk:checked')].map(i=>i.value).join(',')});
+ const fail=e=>{$('#r').textContent='Błąd: '+e.message;['sv','sgn','pvb'].forEach(i=>$('#'+i).disabled=false)};
+ const save=then=>{['sv','sgn','pvb'].forEach(i=>$('#'+i).disabled=true);$('#r').textContent='Zapisuję…';
+  google.script.run.withSuccessHandler(r=>{D=r.d;render();['sv','sgn','pvb'].forEach(i=>$('#'+i).disabled=false);then()}).withFailureHandler(fail).protokol(id,P(),null,'save')};
+ $('#bk').onclick=()=>dlg.close();
+ $('#sv').onclick=()=>save(()=>{$('#r').textContent='✔ Zapisano'});
+ $('#pvb').onclick=()=>{$('#pvb').disabled=true;google.script.run.withSuccessHandler(r=>{$('#pvb').disabled=false;
+   dlg2.className='full';dlg2.innerHTML='<h3 style="margin:0 0 8px">Podgląd protokołu</h3><iframe class="grow" id="pv"></iframe><div class="bot"><button id="pc">Zamknij podgląd</button></div>';dlg2.showModal();$('#pv').srcdoc=r.html;$('#pc').onclick=()=>dlg2.close()}).withFailureHandler(fail).protokol(id,P(),null,'preview')};
+ $('#sgn').onclick=()=>save(()=>{const Pv=P();dlg.close();nameStep(id,Pv)})}
+function nameStep(id,Pv){const z=D.zlecenia.find(x=>x.id==id),dlg2=$('#dlg2');
+ dlg2.className='';dlg2.innerHTML='<h3>Podpis klienta</h3><p class="m">Protokół '+esc(z.nr)+'</p><label>Imię i nazwisko osoby podpisującej (można zostawić puste)</label><input id="p_n" value="'+esc(z.podpisujacy||Pv.osoba||'')+'" autocomplete="off">'+
+ '<div class="row"><button id="nb" class="g">← Wstecz</button><button id="nx">Dalej – podpis ✍</button></div>';
+ dlg2.showModal();$('#nb').onclick=()=>{dlg2.close();protDlg(id)};$('#nx').onclick=()=>signStep(id,Pv,$('#p_n').value.trim())}
+function signStep(id,Pv,name){const z=D.zlecenia.find(x=>x.id==id),dlg2=$('#dlg2');
+ dlg2.className='full';dlg2.innerHTML='<h3 style="margin:0 0 8px">Podpis'+(name?': '+esc(name):'')+'</h3><div class="grow" style="display:flex"><canvas id="sg" style="height:100%"></canvas></div><div class="bot"><button id="clr" class="g">Wyczyść podpis</button><button id="zm" class="g">Zamknij</button><button id="fin">✔ Zatwierdź i wygeneruj PDF</button></div><div id="r" class="m"></div>';
+ dlg2.showModal();
+ const c=$('#sg'),dpr=Math.min(2,window.devicePixelRatio||1);c.width=Math.max(300,c.clientWidth*dpr);c.height=Math.max(150,c.clientHeight*dpr);
+ const x=c.getContext('2d');x.lineWidth=3*dpr;x.lineCap='round';x.lineJoin='round';x.strokeStyle='#000';
+ let dr=false,has=false,bb=null;const grow=(a,b)=>{bb=bb?[Math.min(bb[0],a),Math.min(bb[1],b),Math.max(bb[2],a),Math.max(bb[3],b)]:[a,b,a,b]};
+ const pt=e=>{const r=c.getBoundingClientRect();return [(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
+ c.onpointerdown=e=>{dr=true;has=true;c.setPointerCapture(e.pointerId);const[a,b]=pt(e);grow(a,b);x.beginPath();x.moveTo(a,b);x.lineTo(a+.1,b);x.stroke()};
+ c.onpointermove=e=>{if(!dr)return;const[a,b]=pt(e);grow(a,b);x.lineTo(a,b);x.stroke()};
+ c.onpointerup=c.onpointercancel=()=>{dr=false};
+ $('#clr').onclick=()=>{x.clearRect(0,0,c.width,c.height);has=false;bb=null};
+ $('#zm').onclick=()=>{dlg2.close();nameStep(id,Pv)};
+ $('#fin').onclick=()=>{if(!has){alert('Klient musi się podpisać');return}
+  const pad=10*dpr,sx=Math.max(0,bb[0]-pad),sy=Math.max(0,bb[1]-pad),sw=Math.min(c.width,bb[2]+pad)-sx,sh=Math.min(c.height,bb[3]+pad)-sy,t=document.createElement('canvas');
+  t.width=Math.max(10,sw);t.height=Math.max(10,sh);t.getContext('2d').drawImage(c,sx,sy,sw,sh,0,0,t.width,t.height);
+  ['fin','clr','zm'].forEach(i=>$('#'+i).disabled=true);$('#r').textContent='Generuję PDF, zapisuję w folderze zlecenia i wysyłam e-mail…';
+  google.script.run.withSuccessHandler(r=>{D=r.d;render();
+    if(r.local){dlg2.className='';dlg2.innerHTML='<h3>✅ Podpis zapisany w telefonie</h3><p>PDF powstanie, zapisze się w folderze zlecenia i pójdzie mailem na service@rehaservice.pl po kliknięciu „Odbierz i wyślij” (gdy będzie internet).</p><div class="row"><button id="done">Zamknij</button></div>';$('#done').onclick=()=>dlg2.close();return}
+    dlg2.className='';dlg2.innerHTML='<h3>✅ Protokół gotowy</h3><p>📁 PDF zapisany jako załącznik w folderze zlecenia '+esc(z.nr)+'.</p>'+
+     (r.mail?'<p style="color:#b91c1c">⚠ Nie udało się wysłać e-maila do firmy: '+esc(r.mail)+'</p>':'<p>✉ Wysłano na adres '+esc('service@rehaservice.pl')+'.</p>')+
+     '<div class="row"><a href="https://drive.google.com/uc?export=download&id='+esc(r.id)+'" target="_blank"><button type="button">⬇ Zapisz na komputerze</button></a><a href="'+esc(r.url)+'" target="_blank"><button type="button" class="g">📄 Otwórz PDF</button></a></div>'+
+     mailBox(r.id,Pv.email)+'<div class="row"><button id="done" class="g">Zamknij</button></div>';
+    bindMail(r.id,'Protokół '+z.nr);$('#done').onclick=()=>dlg2.close()})
+  .withFailureHandler(e=>{['fin','clr','zm'].forEach(i=>$('#'+i).disabled=false);$('#r').textContent='Błąd: '+e.message}).protokol(id,Object.assign({},Pv,{podpisujacy:name}),t.toDataURL('image/png').split(',')[1],'final')}}
+
+// ---------- KALENDARZ ----------
+function callInfo(g){const k=D.klienci.find(a=>a.id==g.kid)||{nazwa:'?',kontakt:''},kt=k.kontakt||((D.klienci.find(a=>a.id==k.rodzic)||{}).kontakt)||'',ph=kt.match(/\+?\d[\d \-]{7,}\d/g)||[],em=kt.match(/[^\s,;|]+@[^\s,;|]+\.[^\s,;|]+/g)||[],cs=kontOf(g.kid).length?kontOf(g.kid):kontOf(k.rodzic||'-');
+ return '<b>'+esc(kn(g.kid))+'</b> · '+g.n+' urz.<br>'+(cs.length?cs.map(c=>'<div>'+esc(c.osoba)+(c.rola?' <small>('+esc(c.rola)+')</small>':'')+': '+(c.telefon?'☎ '+telA(c.telefon)+' ':'')+(c.email?'✉ '+mailA(c.email):'')+'</div>').join(''):(ph.length||em.length?ph.map(t=>'☎ <a href="tel:'+t.replace(/[ \-]/g,'')+'">'+esc(t)+'</a>').join(' &nbsp; ')+(ph.length&&em.length?' &nbsp; ':'')+em.map(e=>'✉ <a href="mailto:'+esc(e)+'">'+esc(e)+'</a>').join(' &nbsp; '):'<small>'+lnk(kt)+'</small>'))+'<br><small>przegląd ważny do: '+g.due+'</small>'}
+function callDone(kid,mon){run('save','Rozmowy',{klientId:kid,miesiac:mon,data:iso(new Date()),kto:D.me})}
+let cal='all';
+function rC(){const y=cm.getFullYear(),m=cm.getMonth(),ev={},pre=y+'-'+p2(m+1),today=iso(new Date()),cur=today.slice(0,7),calls={},prs=new Set();
+ const add=(d,t,c)=>(ev[d]=ev[d]||[]).push({t,c});
+ D.zlecenia.filter(z=>cal=='all'||svHas(z,D.me)).forEach(z=>z.termin&&add(z.termin,esc(z.nr)+' · '+esc(kn(z.klientId))+' ('+esc(z.status)+')',z.status.startsWith('Wykonane')?'ok':'zl'));
+ D.urzadzenia.forEach(u=>{const du=dueOf(u);if(!du)return;const p=du.split('-'),d30=new Date(+p[0],+p[1]-1,+p[2]);d30.setDate(d30.getDate()-30);const c30=iso(d30);
+  const pk=u.klientId+'|'+du;if(!prs.has(pk)){prs.add(pk);add(du,'Mija przegląd – '+esc(kn(u.klientId)),'pr')}
+  const key=u.klientId+'|'+c30.slice(0,7),g=calls[key]=calls[key]||{kid:u.klientId,mon:c30.slice(0,7),n:0,due:du,c30:c30};g.n++;if(du<g.due)g.due=du;if(c30<g.c30)g.c30=c30});
+ Object.values(calls).forEach(g=>add(g.c30,'☎ Zadzwoń – '+esc(kn(g.kid)),'p30'));
+ const doneOf=g=>(D.rozmowy||[]).find(r=>r.klientId==g.kid&&r.miesiac==g.mon),all=Object.values(calls);
+ const todo=all.filter(g=>(g.mon==pre||(pre==cur&&g.mon<pre))&&!doneOf(g)).sort((a,b)=>a.due.localeCompare(b.due)),dn=all.filter(g=>g.mon==pre&&doneOf(g));
+ const off=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+ let g='';g=['Pn','Wt','Śr','Cz','Pt','So','Nd'].map(d=>'<div class="w">'+d+'</div>').join('')+'<div style="background:none"></div>'.repeat(off);
+ for(let d=1;d<=n;d++){const k=pre+'-'+p2(d);g+='<div'+(k==today?' style="outline:2px solid #1f3a5f"':'')+'>'+d+'<br>'+(ev[k]||[]).map(e=>'<span class="dot '+e.c+'"></span>').join('')+'</div>'}
+ const mn=['styczeń','luty','marzec','kwiecień','maj','czerwiec','lipiec','sierpień','wrzesień','październik','listopad','grudzień'][m];
+ const zl=Object.keys(ev).sort().filter(k=>k.startsWith(pre)).map(k=>ev[k].filter(e=>e.c=='zl'||e.c=='ok').map(e=>'<div class="ev"><span class="dot '+e.c+'"></span><b>'+k+'</b> '+e.t+'</div>').join('')).join('');
+ $('#main').innerHTML='<div class="bar"><button class="g" onclick="cm=new Date(y0(),m0()-1,1);rC()">‹</button><b style="flex:3;text-align:center;padding:8px">'+mn+' '+y+'</b><button class="g" onclick="cm=new Date(y0(),m0()+1,1);rC()">›</button></div>'+
+ '<div class="bar"><button class="'+(cal=='all'?'':'g')+'" onclick="cal=\'all\';rC()">Kalendarz ogólny</button><button class="'+(cal=='my'?'':'g')+'" onclick="cal=\'my\';rC()">Mój kalendarz</button></div><div class="cal">'+g+'</div><p><span class="dot zl"></span>zlecenie <span class="dot ok"></span>wykonane <span class="dot p30"></span>zadzwoń do klienta <span class="dot pr"></span>termin przeglądu</p>'+
+ '<div class="card"><div class="d"><h4>☎ Do zadzwonienia – '+mn+' '+y+' ('+todo.length+')</h4>'+
+ (todo.map(x=>'<label class="chk" style="align-items:flex-start;padding:8px 0;border-top:1px solid #eee"><input type="checkbox" onchange="callDone(\''+x.kid+'\',\''+x.mon+'\')" style="margin-top:4px"><span>'+(x.mon<pre?'<span style="color:#dc2626">ZALEGŁE</span> ':'')+callInfo(x)+'</span></label>').join('')||'<span class="m">Brak rozmów do wykonania w tym miesiącu</span>')+'</div></div>'+
+ '<div class="card"><div class="d"><details'+(dopen?' open':'')+' ontoggle="dopen=this.open"><summary><b>✅ Wykonane rozmowy ('+dn.length+')</b></summary>'+
+ (dn.map(x=>{const r=doneOf(x);return '<div class="ev">'+callInfo(x)+'<br><small>✔ '+esc(r.data)+' · '+esc(r.kto)+'</small> <button class="g" onclick="run(\'del\',\'Rozmowy\',\''+r.id+'\')">Cofnij</button></div>'}).join('')||'<p class="m">Brak</p>')+'</details></div></div>'+
+ '<div class="card"><div class="d"><h4>Zlecenia w tym miesiącu</h4>'+(zl||'<span class="m">Brak zleceń</span>')+'</div></div>'}
+const y0=()=>cm.getFullYear(),m0=()=>cm.getMonth();
+
+// ---------- IMPORT Z EXCELA ----------
+const normS=s=>String(s||'').trim().toLowerCase().replace(/\s+/g,'');
+function dateOf(v){if(v instanceof Date){if(isNaN(v))return null;const d=new Date(v.getTime()+432e5);return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
+ if(typeof v=='number'){const d=new Date(Math.round((v-25569)*864e5));return d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate())}
+ v=String(v==null?'':v).trim();if(!v)return '';let m;
+ if(m=v.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))return m[1]+'-'+p2(+m[2])+'-'+p2(+m[3]);
+ if(m=v.match(/^(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})$/)){if(+m[2]<1||+m[2]>12||+m[1]<1||+m[1]>31)return null;return m[3]+'-'+p2(+m[2])+'-'+p2(+m[1])}
+ return null}
+function importDlg(kid,aid){const dlg=$('#dlg');
+ dlg.innerHTML='<h3>Import urządzeń z Excela</h3><p class="m">Plik (.xlsx, .xls lub .csv) z 3 kolumnami: <b>1. Nazwa urządzenia, 2. Numer seryjny, 3. Data kolejnego przeglądu</b> (np. 05.06.2027). Pierwszy wiersz może być nagłówkiem.</p><input id="xf" type="file" accept=".xlsx,.xls,.csv"><div id="xr"></div><div class="row"><button id="xi" hidden>Importuj</button><button id="cl" class="g">Zamknij</button></div>';
+ dlg.showModal();$('#cl').onclick=()=>dlg.close();let items=[];
+ $('#xf').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('#xr').textContent='Wczytuję…';
+  try{if(typeof XLSX=='undefined')throw new Error('Nie załadowano biblioteki Excel – sprawdź internet i odśwież stronę');
+   const wb=XLSX.read(await f.arrayBuffer(),{type:'array',cellDates:true});
+   let rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,raw:true,defval:''});
+   if(rows[0]&&/nazw|urz|sprz|name|model/i.test(String(rows[0][0])))rows.shift();
+   const ex=new Set(D.urzadzenia.filter(u=>u.klientId==kid).map(u=>normS(u.nr_seryjny)).filter(Boolean)),seen=new Set();
+   items=rows.filter(r=>String(r[0]).trim()).map(r=>{const nr=String(r[1]).trim(),k=normS(nr),dt=dateOf(r[2]);let st='ok',msg='OK';
+    if(k&&ex.has(k)){st='dup';msg='❗ Urządzenie o numerze '+nr+' już istnieje'}
+    else if(k&&seen.has(k)){st='dup';msg='❗ Numer '+nr+' powtórzony w pliku'}
+    else if(dt===null){st='warn';msg='⚠ Błędna data – import bez daty'}
+    if(k&&st!='dup')seen.add(k);
+    return {nazwa:String(r[0]).trim(),nr:nr,data:dt||'',st:st,msg:msg}});
+   const good=items.filter(i=>i.st!='dup'),bad=items.filter(i=>i.st=='dup');
+   $('#xr').innerHTML=(bad.length?'<p style="color:#dc2626"><b>'+bad.map(i=>esc(i.msg)).join('<br>')+'</b><br><small>Te wiersze zostaną pominięte.</small></p>':'')+
+    '<p>Wiersze: '+items.length+' · do zaimportowania: <b>'+good.length+'</b></p><div style="max-height:240px;overflow:auto"><table style="width:100%;font-size:12px;border-collapse:collapse">'+
+    items.map(i=>'<tr style="border-top:1px solid #eee;'+(i.st=='dup'?'color:#dc2626':'')+'"><td>'+esc(i.nazwa)+'</td><td>'+esc(i.nr)+'</td><td>'+esc(i.data)+'</td><td>'+esc(i.st=='ok'?'✔':i.msg)+'</td></tr>').join('')+'</table></div>';
+   $('#xi').hidden=!good.length;$('#xi').textContent='Importuj '+good.length+' urządzeń'}
+  catch(x){$('#xr').innerHTML='<span style="color:#dc2626">Błąd: '+esc(x.message||x)+'</span>'}};
+ $('#xi').onclick=()=>{$('#xi').disabled=true;$('#xr').textContent='Importuję…';
+  google.script.run.withSuccessHandler(r=>{D=r.d;render();$('#xi').hidden=true;$('#xr').innerHTML='✅ Dodano urządzeń: <b>'+r.added+'</b>'+(r.dup.length?'<p style="color:#dc2626"><b>'+r.dup.map(s=>'Urządzenie o numerze '+esc(s)+' już istnieje').join('<br>')+'</b></p>':'')})
+  .withFailureHandler(e=>{$('#xi').disabled=false;$('#xr').textContent='Błąd: '+e.message}).importUrz(kid,aid,items.filter(i=>i.st!='dup').map(i=>({nazwa:i.nazwa,nr:i.nr,data:i.data})))}
+}
+
+// ---------- PLIKI ZLECENIA ----------
+function prep(f){return new Promise((ok,no)=>{
+ if(f.type.startsWith('image/')){const im=new Image();
+  im.onload=()=>{const s=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+   ok({name:f.name.replace(/\.\w+$/,'')+'.jpg',mime:'image/jpeg',b64:c.toDataURL('image/jpeg',.8).split(',')[1]})};
+  im.onerror=()=>no(new Error('nie da się odczytać zdjęcia'));im.src=URL.createObjectURL(f)}
+ else if(f.size>10e6)no(new Error('plik za duży (max 10 MB) – dodaj go w folderze na Dysku'));
+ else{const r=new FileReader();r.onload=()=>ok({name:f.name,mime:f.type||'application/octet-stream',b64:r.result.split(',')[1]});r.readAsDataURL(f)}})}
+function filesDlg(id){
+ const dlg=$('#dlg');
+ dlg.innerHTML='<h3>Pliki zlecenia</h3><div id="fl" class="m">Wczytywanie…</div><div id="st" class="m"></div><div class="row"><button id="add">+ Zdjęcia / pliki</button><button id="cl" class="g">Zamknij</button></div><input id="fi" type="file" accept="image/*,video/*,.pdf" multiple hidden>';
+ dlg.showModal();
+ const load=()=>google.script.run.withSuccessHandler(r=>{
+  $('#fl').innerHTML='<a href="'+esc(r.url)+'" target="_blank">📁 Otwórz folder na Dysku (filmy, duże pliki)</a>'+(r.files.length?'<div class="gal">'+r.files.map(f=>'<a href="'+esc(f.url)+'" target="_blank"><img src="https://drive.google.com/thumbnail?id='+f.id+'&sz=w300" alt=""><br>'+esc(f.name)+'</a>').join('')+'</div>':'<p class="m">Brak plików</p>')
+ }).withFailureHandler(e=>$('#fl').textContent='Błąd: '+e.message).pliki(id);
+ load();
+ $('#cl').onclick=()=>dlg.close();
+ $('#add').onclick=()=>$('#fi').click();
+ $('#fi').onchange=async e=>{
+  const fl=[...e.target.files];
+  for(const f of fl){$('#st').textContent='Wysyłam: '+f.name+'…';
+   try{const d=await prep(f);await new Promise((ok,no)=>google.script.run.withSuccessHandler(ok).withFailureHandler(no).upload(id,d.name,d.mime,d.b64))}
+   catch(x){alert(f.name+': '+(x.message||x))}}
+  $('#st').textContent='';e.target.value='';load()}
+}
+
+// ===== Poprawianie raportów z miernika: 1 pomiar = 1 strona + uzupełnione pola =====
+// deps: {PDFLib, pdfjsLib, textImage(text,sizePt)->Promise<{bytes,w,h}>}
+async function analyzeRaport(srcBytes, pdfjsLib) {
+  const W = 595.276;
+  // 1) analiza: gdzie zaczynają się pomiary i gdzie kończy się treść na stronie
+  const pj = await pdfjsLib.getDocument({data: srcBytes.slice(0)}).promise;
+  const H = (await pj.getPage(1)).view[3];
+  const blocks = []; let cur = null;
+  for (let i = 1; i <= pj.numPages; i++) {
+    const tc = await (await pj.getPage(i)).getTextContent();
+    const items = tc.items.filter(x => x.str.trim());
+    const starts = items.filter(x => x.str.trim() === 'PROJEKT:').map(x => H - x.transform[5] - 10.34).filter(y => y > 95 && y < 780).sort((a, b) => a - b);
+    const body = items.map(x => H - x.transform[5]).filter(y => y > 102 && y < 780);
+    const end = Math.max(...body) + (i === pj.numPages ? 6.5 : 7.0);
+    if (!starts.length) { if (cur) cur.segs.push([i - 1, 101.9, end]); continue; }
+    if (starts[0] > 104 && cur) cur.segs.push([i - 1, 101.9, starts[0]]);
+    // dane urządzenia z tabelki pomiaru (pozycje pól są stałe względem początku tabelki)
+    const fld = (s, dy, x0, x1) => items.filter(it => Math.abs(H - it.transform[5] - (s + dy)) < 2.5 && it.transform[4] >= x0 && it.transform[4] < x1)
+      .sort((p, q) => p.transform[4] - q.transform[4]).map(x => x.str).join(' ').replace(/\s+/g, ' ').trim();
+    starts.forEach((s, k) => { cur = {segs: [[i - 1, s, k + 1 < starts.length ? starts[k + 1] : end]],
+      dev: {nazwa: fld(s, 41.0, 96, 192), nr: fld(s, 56.2, 96, 192), due: fld(s, 25.8, 280, 435), tested: fld(s, 10.34, 280, 435)}}; blocks.push(cur); });
+  }
+  return {H, blocks};
+}
+
+// Odczyt urządzeń z raportu: z poprawionego przez aplikację PDF (znacznik w metadanych) albo z oryginalnego pliku miernika
+async function readRaportDevices(srcBytes, pdfjsLib) {
+  const pj = await pdfjsLib.getDocument({data: srcBytes.slice(0)}).promise;
+  try { const m = await pj.getMetadata(), sub = (m.info && m.info.Subject) || '';
+    if (sub.indexOf('REHA-DEV:') === 0) return JSON.parse(sub.slice(9)); } catch (e) {}
+  const {blocks} = await analyzeRaport(srcBytes, pdfjsLib);
+  return blocks.map(b => b.dev);
+}
+
+async function fixRaport(srcBytes, V, deps, onStep) {
+  const {PDFLib, pdfjsLib} = deps, {PDFDocument, PDFName, PDFArray, PDFRawStream, rgb, StandardFonts} = PDFLib;
+  const step = m => onStep && onStep(m);
+  const W = 595.276;
+
+  step('Analizuję plik…');
+  const {H, blocks} = await analyzeRaport(srcBytes, pdfjsLib);
+  if (!blocks.length) throw new Error('Nie znaleziono żadnego pomiaru (brak pola „PROJEKT:”). Czy to na pewno raport z miernika?');
+
+  // 2) kopia źródła bez podpisu/pieczątki, która w oryginale zachodzi na tabelę
+  step('Przygotowuję strony…');
+  const dec = s => PDFLib.decodePDFRawStream(s).decode();
+  const orig = await PDFDocument.load(srcBytes), clean = await PDFDocument.load(srcBytes);
+  clean.getPages().forEach(pg => {
+    const c = pg.node.Contents(), ctx = clean.context;
+    const arr = c instanceof PDFArray ? c.asArray().map(r => ctx.lookup(r)) : [c];
+    let s = arr.map(st => { const u = dec(st); let t = ''; for (let k = 0; k < u.length; k++) t += String.fromCharCode(u[k]); return t; }).join('\n');
+    const flip = /1 0 0 -1 0 [\d.]+ cm/.test(s), xo = pg.node.Resources().get(PDFName.of('XObject'));
+    s = s.replace(/q\s+[-\d.]+\s+0\s+0\s+[-\d.]+\s+[-\d.]+\s+([-\d.]+)\s+cm\s+\/(\S+)\s+Do\s+Q/g, (m, f, name) => {
+      const o = xo && xo.get(PDFName.of(name)) && ctx.lookup(xo.get(PDFName.of(name)));
+      const isImg = o && o.dict && String(o.dict.get(PDFName.of('Subtype'))) === '/Image';
+      const bottom = flip ? parseFloat(f) > 700 : parseFloat(f) < 100;
+      return isImg && bottom ? '' : m;
+    });
+    const bytes = new Uint8Array(s.length); for (let k = 0; k < s.length; k++) bytes[k] = s.charCodeAt(k) & 255;
+    pg.node.set(PDFName.of('Contents'), ctx.register(ctx.stream(bytes)));
+  });
+
+  // 3) składanie: każda strona = nagłówek + fragmenty jednego pomiaru + stopka
+  step('Układam pomiary po jednym na stronie…');
+  const out = await PDFDocument.create(), last = orig.getPageCount() - 1;
+  const [hdr, ftr] = await out.embedPages([orig.getPage(last), orig.getPage(last)],
+    [{left: 0, bottom: H - 101.9, right: W, top: H}, {left: 0, bottom: H - 811.5, right: W, top: H - 700}]);
+  const flat = blocks.flatMap(b => b.segs);
+  const segEmb = await out.embedPages(flat.map(s => clean.getPage(s[0])),
+    flat.map(s => ({left: 0, bottom: H - s[2], right: W, top: H - s[1]})));
+
+  // 4) pola uzupełniane (obrazki z tekstem – dzięki temu działają polskie znaki w każdej przeglądarce)
+  step('Wpisuję dane…');
+  const font = await out.embedFont(StandardFonts.Helvetica);
+  const fields = [
+    {k: 'klient', x: 37.8, top: 123.2}, {k: 'komentarz', x: 282.2, top: 138.4},
+    {k: 'miejsce', x: 282.2, top: 153.6}, {k: 'uzytkownik', x: 437.1, top: 153.6}];
+  const img = {};
+  for (const f of fields) if (V[f.k]) { const t = await deps.textImage(V[f.k], 5.7); img[f.k] = {e: await out.embedPng(t.bytes), w: t.w, h: t.h}; }
+  if (V.zamowienie) { const t = await deps.textImage(V.zamowienie, 8); img.zam = {e: await out.embedPng(t.bytes), w: t.w, h: t.h}; }
+
+  let si = 0;
+  blocks.forEach((b, n) => {
+    const page = out.addPage([W, H]);
+    page.drawPage(hdr, {x: 0, y: H - 101.9}); page.drawPage(ftr, {x: 0, y: H - 811.5});
+    let y = 101.9;
+    b.segs.forEach(sg => { const h = sg[2] - sg[1]; page.drawPage(segEmb[si++], {x: 0, y: H - y - h}); y += h; });
+    // stara wartość w polu PROJEKT zostaje zamazana kolorem komórki
+    page.drawRectangle({x: 36.4, y: H - 132.2, width: 155.4, height: 14.2, color: rgb(.925, .953, 1)});
+    for (const f of fields) { const m = img[f.k]; if (m) page.drawImage(m.e, {x: f.x, y: H - f.top - 4.5 - m.h * 0.28 - 0.0, width: m.w, height: m.h}); }
+    if (img.zam) page.drawImage(img.zam.e, {x: 356.0, y: H - 50.3 - img.zam.h * 0.28, width: img.zam.w, height: img.zam.h});
+    page.drawText((n + 1) + '/' + blocks.length, {x: 474.1, y: H - 819.3, size: 8, font});
+  });
+  out.setSubject('REHA-DEV:' + JSON.stringify(blocks.map(b => b.dev)));
+  step('Zapisuję plik…');
+  return {bytes: await out.save(), count: blocks.length, devices: blocks.map(b => b.dev)};
+}
+if (typeof module !== 'undefined') module.exports = {fixRaport, readRaportDevices};
+
+// ---------- WYNIKI BADAŃ (poprawianie raportu z miernika) ----------
+async function textImage(text,size){const sc=8,c=document.createElement('canvas'),x=c.getContext('2d'),fam='"Segoe UI","Liberation Sans",Arial,sans-serif';
+ x.font=(size*sc)+'px '+fam;const w=x.measureText(text).width/sc+1,h=size*1.4;c.width=Math.ceil(w*sc);c.height=Math.ceil(h*sc);
+ x.font=(size*sc)+'px '+fam;x.fillStyle='#000';x.textBaseline='alphabetic';x.fillText(text,0,size*1.05*sc);
+ const b=await new Promise(r=>c.toBlob(r,'image/png'));return {bytes:new Uint8Array(await b.arrayBuffer()),w:c.width/sc,h:c.height/sc}}
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem('rap_'+k)||'';localStorage.setItem('rap_'+k,v)}catch(e){return ''}};
+function wynikiDlg(id){const z=D.zlecenia.find(x=>x.id==id),k=D.klienci.find(x=>x.id==z.klientId)||{},dlg=$('#dlg');
+ const dv=(z.urzadzenia||'').split(',').map(i=>D.urzadzenia.find(u=>u.id==i)).filter(Boolean),a=dv.map(u=>D.adresy.find(x=>x.id==u.adresId)).filter(Boolean)[0];
+ const place=(a?a.adres:k.adres)||'';let out=null;
+ dlg.innerHTML='<h3>Wyniki badań – '+esc(z.nr)+'</h3><p class="m">Wgraj plik PDF z miernika. Każdy pomiar trafi na osobną stronę, a pola poniżej wpiszą się w każdy pomiar.</p>'+
+ '<label>Plik PDF z miernika *</label><input id="w_f" type="file" accept="application/pdf,.pdf">'+
+ '<label>Projekt (nazwa klienta)</label><input id="w_k" value="'+esc(k.nazwa||'')+'">'+
+ '<label>Miejsce pomiaru (adres placówki)</label><input id="w_m" value="'+esc(place)+'">'+
+ '<label>Komentarz</label><input id="w_c" value="'+esc(ls('komentarz'))+'">'+
+ '<label>Użytkownik</label><input id="w_u" value="'+esc(ls('uzytkownik'))+'">'+
+ '<label>Nr zamówienia</label><input id="w_z" value="">'+
+ '<div class="row"><button id="w_go">⚙ Przetwórz PDF</button><button id="cl" class="g">Zamknij</button></div><div id="w_r"></div>';
+ dlg.showModal();$('#cl').onclick=()=>dlg.close();
+ $('#w_go').onclick=async()=>{const f=$('#w_f').files[0];if(!f){alert('Wybierz plik PDF z miernika');return}
+  const V={klient:$('#w_k').value.trim(),miejsce:$('#w_m').value.trim(),komentarz:$('#w_c').value.trim(),uzytkownik:$('#w_u').value.trim(),zamowienie:$('#w_z').value.trim()};
+  ls('komentarz',V.komentarz);ls('uzytkownik',V.uzytkownik);$('#w_go').disabled=true;const R=$('#w_r');
+  try{if(typeof PDFLib=='undefined'||typeof pdfjsLib=='undefined')throw new Error('Nie załadowano bibliotek PDF – sprawdź internet i odśwież stronę');
+   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   const res=await fixRaport(new Uint8Array(await f.arrayBuffer()),V,{PDFLib,pdfjsLib,textImage},m=>R.textContent=m);
+   const name=('Wyniki badań '+z.nr+' '+(k.nazwa||'')).replace(/[\\\/:*?"<>|]/g,'-').trim()+'.pdf',url=URL.createObjectURL(new Blob([res.bytes],{type:'application/pdf'}));
+   R.innerHTML='✅ Gotowe: <b>'+res.count+'</b> pomiarów, każdy na osobnej stronie.<div class="row"><a href="'+url+'" download="'+esc(name)+'"><button type="button">⬇ Pobierz na komputer</button></a><button id="w_sv" class="g">☁ Zapisz w folderze zlecenia</button></div><div id="w_s"></div><div id="w_d"></div>';
+   const iso2=s=>{const m=String(s||'').match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/);return m?m[3]+'-'+p2(+m[2])+'-'+p2(+m[1]):''};
+   const map=new Map();res.devices.forEach(d=>{const k=normS(d.nr);if(!k)return;const o={nazwa:d.nazwa,nr:d.nr,due:iso2(d.due),tested:iso2(d.tested)};const e=map.get(k);if(!e||o.due>e.due)map.set(k,o)});
+   const items=[...map.values()],noNr=res.devices.filter(d=>!normS(d.nr)).length,inDb=new Map(D.urzadzenia.filter(u=>u.klientId==z.klientId).map(u=>[normS(u.nr_seryjny),u]));
+   $('#w_d').innerHTML='<h4>Urządzenia z raportu ('+items.length+')</h4><table style="width:100%;font-size:13px;border-collapse:collapse">'+items.map(it=>{const u=inDb.get(normS(it.nr));return '<tr style="border-top:1px solid #eee"><td>'+esc(it.nazwa)+'<br><small>'+esc(it.nr)+'</small></td><td>'+(u?'✔ w bazie<br><small>przegląd: '+esc(u.przeglad_do||'brak')+' → <b>'+esc(it.due)+'</b></small>':'<span style="color:#c2410c"><b>🆕 nowe</b></span><br><small>do akceptacji</small>')+'</td></tr>'}).join('')+'</table>'+(noNr?'<p class="m">Pominięto '+noNr+' pomiarów bez numeru seryjnego.</p>':'')+
+    '<div class="row"><button id="w_ap">Zaktualizuj bazę urządzeń</button></div><div id="w_a"></div>';
+   $('#w_ap').onclick=()=>{$('#w_ap').disabled=true;$('#w_a').textContent='Aktualizuję…';google.script.run.withSuccessHandler(r=>{D=r.d;render();$('#w_a').innerHTML='✅ Zmieniono daty przeglądu: <b>'+r.updated.length+'</b>'+(r.pending.length?' · do akceptacji (zakładka Zlecenia): <b>'+r.pending.length+'</b>':'')+(r.skipped.length?'<br><small>Pominięto: '+esc(r.skipped.join(', '))+'</small>':'')}).withFailureHandler(e=>{$('#w_ap').disabled=false;$('#w_a').textContent='Błąd: '+e.message}).zastosujWyniki(id,items)};
+   $('#w_sv').onclick=()=>{$('#w_sv').disabled=true;$('#w_s').textContent='Zapisuję na Dysku…';let s='';const u=res.bytes,CH=0x8000;for(let i=0;i<u.length;i+=CH)s+=String.fromCharCode.apply(null,u.subarray(i,i+CH));
+    google.script.run.withSuccessHandler(r=>{$('#w_s').innerHTML='✅ Zapisano w folderze zlecenia: <a href="'+esc(r.url)+'" target="_blank">'+esc(r.name)+'</a>'}).withFailureHandler(e=>{$('#w_sv').disabled=false;$('#w_s').textContent='Błąd: '+e.message}).zapiszPdf(id,name,btoa(s))}
+  }catch(e){R.innerHTML='<span style="color:#dc2626">Błąd: '+esc(e.message||e)+'</span>'}finally{$('#w_go').disabled=false}}
+}
+
+// ---------- IMPORT URZĄDZEŃ Z PDF (raport z miernika lub PDF poprawiony przez aplikację) ----------
+const isoPl=s=>{const m=String(s||'').match(/(\d{1,2})[.\/-](\d{1,2})[.\/-](\d{4})/);return m?m[3]+'-'+p2(+m[2])+'-'+p2(+m[1]):''};
+function importPdfDlg(kid,aid){const dlg=$('#dlg'),k=D.klienci.find(x=>x.id==kid)||{};
+ dlg.innerHTML='<h3>Import urządzeń z PDF – '+esc(k.nazwa||'')+'</h3><p class="m">Wgraj raport z miernika (oryginalny albo poprawiony przez aplikację). Z każdego pomiaru odczytam: nazwę urządzenia (TYP), numer seryjny (ID URZĄDZENIA) i datę ponownego sprawdzenia. Urządzenie, które klient już ma (po numerze seryjnym), dostanie nową datę przeglądu. Pozostałe zostaną dodane.</p><input id="pf" type="file" accept="application/pdf,.pdf"><div id="pr"></div><div class="row"><button id="pi" hidden>Zastosuj</button><button id="cl" class="g">Zamknij</button></div>';
+ dlg.showModal();$('#cl').onclick=()=>dlg.close();let items=[];
+ $('#pf').onchange=async e=>{const f=e.target.files[0];if(!f)return;const R=$('#pr');R.textContent='Wczytuję…';$('#pi').hidden=true;
+  try{if(typeof pdfjsLib=='undefined')throw new Error('Nie załadowano biblioteki PDF – sprawdź internet i odśwież stronę');
+   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+   const devs=await readRaportDevices(new Uint8Array(await f.arrayBuffer()),pdfjsLib);
+   if(!devs.length)throw new Error('Nie znaleziono żadnych pomiarów w pliku');
+   const map=new Map(),noNr=[];devs.forEach(d=>{const key=normS(d.nr);if(!key||!String(d.nazwa||'').trim()){noNr.push(d.nazwa||'(bez nazwy)');return}
+    const o={nazwa:String(d.nazwa).trim(),nr:String(d.nr).trim(),due:isoPl(d.due),tested:isoPl(d.tested)},p=map.get(key);if(!p||o.due>p.due)map.set(key,o)});
+   items=[...map.values()];const have=new Map(D.urzadzenia.filter(u=>u.klientId==kid).map(u=>[normS(u.nr_seryjny),u]));
+   const nUpd=items.filter(i=>have.has(normS(i.nr))).length;
+   R.innerHTML='<p>Pomiarów w pliku: '+devs.length+' · różnych urządzeń: <b>'+items.length+'</b> (do dodania: <b>'+(items.length-nUpd)+'</b>, do zaktualizowania: <b>'+nUpd+'</b>)</p>'+
+    '<div style="max-height:260px;overflow:auto"><table style="width:100%;font-size:12px;border-collapse:collapse">'+items.map(i=>{const u=have.get(normS(i.nr));return '<tr style="border-top:1px solid #eee"><td>'+esc(i.nazwa)+'<br><small>'+esc(i.nr)+'</small></td><td>'+(u?'✔ już w bazie<br><small>przegląd: '+esc(u.przeglad_do||'brak')+' → <b>'+esc(i.due||'?')+'</b></small>':'<b style="color:#15803d">➕ nowe</b><br><small>ważny do: '+esc(i.due||'?')+'</small>')+'</td></tr>'}).join('')+'</table></div>'+(noNr.length?'<p class="m">Pominięto pomiary bez numeru seryjnego: '+noNr.length+'</p>':'');
+   $('#pi').hidden=!items.length;$('#pi').disabled=false;$('#pi').textContent='Zastosuj ('+items.length+')'}
+  catch(x){R.innerHTML='<span style="color:#dc2626">Błąd: '+esc(x.message||x)+'</span>'}};
+ $('#pi').onclick=()=>{$('#pi').disabled=true;$('#pr').textContent='Zapisuję…';
+  google.script.run.withSuccessHandler(r=>{D=r.d;render();$('#pi').hidden=true;$('#pr').innerHTML='✅ Dodano urządzeń: <b>'+r.added.length+'</b> · zmieniono daty przeglądu: <b>'+r.updated.length+'</b>'+(r.skipped.length?'<br><small>Pominięto: '+esc(r.skipped.join(', '))+'</small>':'')})
+  .withFailureHandler(e=>{$('#pi').disabled=false;$('#pr').textContent='Błąd: '+e.message}).importPdfUrz(kid,aid,items)}
+}
+
+run('init');
+</script></body></html>
